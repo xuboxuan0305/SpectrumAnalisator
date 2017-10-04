@@ -1,0 +1,2 @@
+# SpectrumAnalisator
+Read, Analyse Spectrum

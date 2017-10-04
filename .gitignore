@@ -22,3 +22,6 @@
 hs_err_pid*
 .idea/*
 *.iml
+src/SPE/Co60spe/*
+out/production/*
+

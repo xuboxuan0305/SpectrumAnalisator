@@ -27,7 +27,8 @@ import static org.mockito.Mockito.*;
  * Created by Administrator on 7/20/17.
  */
 public class SpectrumAnalyserTest {
-    private static final String PATH = "C:\\JAVA\\Spectrum\\src\\SPE\\Co60spe\\Co-60 2.spe";
+    private static final String PATH =
+            "C:\\Users\\dark1\\IdeaProjects\\SpectrumAnalisator\\src\\SPE\\Co60spe\\Co-60 2.spe";
     private static final Spectrum spectrum = new Spectrum(PATH);
 
     @Test

@@ -12,14 +12,16 @@ import static org.mockito.Mockito.when;
 /**
  * Created by Renat Razumilov on 21/09/17.
  */
+
+
 public class TestWithMocks {
     @Test
-    public void testGetExtension(){
+    public void testGetExtension() {
         Spectrum spe = mock(Spectrum.class);
         ExtensionValidation eValid = new ExtensionValidation();
         eValid.setValidation();
         when(spe.getValidExt()).thenReturn(eValid);
-        assertEquals(spe.getValidExt(),eValid);
+        assertEquals(spe.getValidExt(), eValid);
         //
     }
 }

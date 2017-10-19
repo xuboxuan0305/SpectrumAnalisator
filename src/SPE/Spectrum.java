@@ -16,13 +16,13 @@ import static SPE.StaticMethods.getChnValues;
 import static SPE.StaticMethods.getSpeHead;
 
 public class Spectrum {
-    private String path;
+    private String path; // move to separate class "reader"
     private SpeMetaData head;
     private ChannelsValues[] spe;
     private EnergyCalibration energyCalibration;
     private List<Nuclide> nLibrary;
-    private ChooseMethodToReadFile method;
-    private ExtensionValidation validExt;
+    private ChooseMethodToReadFile method; // move to separate class "reader"
+    private ExtensionValidation validExt; // move to separate class "reader"
 
     public ExtensionValidation getValidExt() {
         return validExt;

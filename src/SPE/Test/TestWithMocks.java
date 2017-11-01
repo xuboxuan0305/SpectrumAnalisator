@@ -2,6 +2,7 @@ package SPE.Test;
 
 import SPE.Classes.ExtensionValidation;
 import SPE.Read.ChooseMethodToReadFile;
+import SPE.Read.SpectrumReader;
 import SPE.Spectrum;
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class TestWithMocks {
     @Test
     public void testGetExtension() {
-        Spectrum spe = mock(Spectrum.class);
+        SpectrumReader spe = mock(SpectrumReader.class);
         ExtensionValidation eValid = new ExtensionValidation();
         eValid.setValidation();
         when(spe.getValidExt()).thenReturn(eValid);

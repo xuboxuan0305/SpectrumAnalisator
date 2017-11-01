@@ -8,7 +8,7 @@ import SPE.Classes.Time;
 public class StaticMethods {
     public static final Integer CORR_YEAR = 2000;
 
-    static SpeMetaData getSpeHead(String[] head){
+    public static SpeMetaData getSpeHead(String[] head){
         Date speDate = convert2Date(head[0]);
         Time speTime = convert2Time(head[1]);
         float liveTime = Float.parseFloat(head[2]);
@@ -24,7 +24,7 @@ public class StaticMethods {
         }
     }
 
-    static ChannelsValues[] getChnValues(String[] speVal, int speChannels){
+    public static ChannelsValues[] getChnValues(String[] speVal, int speChannels){
         ChannelsValues[] cChnVal = new ChannelsValues[speChannels];
         for(int i = 0; i<speVal.length;i++){
             cChnVal[i] = convert2ChnValues(String.valueOf(speVal[i]));

@@ -1,60 +1,32 @@
 package SPE;
 
 import SPE.Classes.*;
+import SPE.Exceptions.SpectrumException;
 import SPE.Interfaces.NuclideInterface;
-import SPE.Interfaces.ValidateExtension;
-import SPE.Read.ChooseMethodToReadFile;
-import SPE.lmplementations.ValidateExtensionImpl;
 import SPE.lmplementations.checkNuclidesForExistance;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static SPE.Read.ReadSpectrumTxt.CHANNELS;
-import static SPE.StaticMethods.getChnValues;
-import static SPE.StaticMethods.getSpeHead;
-
 public class Spectrum {
-    private String path; // move to separate class "reader"
+
     private SpeMetaData head;
     private ChannelsValues[] spe;
     private EnergyCalibration energyCalibration;
     private List<Nuclide> nLibrary;
-    private ChooseMethodToReadFile method; // move to separate class "reader"
-    private ExtensionValidation validExt; // move to separate class "reader"
 
-    public ExtensionValidation getValidExt() {
-        return validExt;
-    }
-
-    public Spectrum(String path) {
-        this.path = path;
-        check();
+    public Spectrum() {
         this.nLibrary = new ArrayList<>();
         this.energyCalibration = new EnergyCalibration();
-        this.method = new ChooseMethodToReadFile(this.path);
-        read();
-    }
-    private void check(){
-        ValidateExtension validateExtension = new ValidateExtensionImpl();
-        this.validExt = validateExtension.isExtensionValid(getExtension());
     }
 
-    private String getExtension(){
-        String[] pExtension = this.path.split("\\.");
-        int size = pExtension.length;
-        String ext = pExtension[size-1];
-        return ext;
+    public void setHead(SpeMetaData head) {
+        this.head = head;
     }
 
-    private void read(){
-        if (validExt.getValidation()) {
-            setHead();
-            setSpe();
-        }else {
-            System.out.println(validExt.getError());
-        }
+    public void setSpe(ChannelsValues[] spe) {
+        this.spe = spe;
     }
 
     public int nuclideLibSize() {
@@ -158,16 +130,5 @@ public class Spectrum {
     public int getChannelCounts(int channelNumber) {
         return spe[channelNumber - 1].getCounts();
     }
-
-    private void setHead() {
-        String[] sHead = method.ReadWithApropriateMethodHead();
-        this.head = getSpeHead(sHead);
-    }
-
-    private void setSpe() {
-        String[] speVal = method.ReadWithApropriateMethodChannels();
-        this.spe = getChnValues(speVal, CHANNELS);
-    }
-
 
 }

@@ -8,7 +8,7 @@ import SPE.lmplementations.EnergyCalibrInterface;
 import SPE.Interfaces.Calibr;
 import SPE.Nuclides.Co60;
 import SPE.Spectrum;
-import SPE.SpectrumException;
+import SPE.Exceptions.SpectrumException;
 import SPE.lmplementations.PrintSpectrum;
 import org.junit.Test;
 
@@ -28,55 +28,10 @@ import static org.mockito.Mockito.*;
  */
 public class SpectrumAnalyserTest {
     private static final String PATH =
-            "C:\\Users\\dark1\\IdeaProjects\\SpectrumAnalisator\\src\\SPE\\Co60spe\\Co-60 2.spe";
-    private static final Spectrum spectrum = new Spectrum(PATH);
+            "C:\\JAVA\\SpectrumAnalisator\\src\\SPE\\Co60spe\\Co-60 2.spe";
+    private static final Spectrum spectrum = new Spectrum();
 
-    @Test
-    public void testChannelValue() {
-        if (spectrum.getValidExt().getValidation()) {
-            assertEquals("We should get 5948 counts in 7126 channel",
-                    spectrum.getChannelCounts(7126),
-                    5948);
-            assertEquals(spectrum.getChannelCounts(8091), 5011);
-        }else{
-            System.out.println(spectrum.getValidExt().getError());
-        }
-    }
 
-    @Test
-    public void testHead() {
-        if (spectrum.getValidExt().getValidation()) {
-            assertEquals("We should get the day of the Date",
-                    spectrum.getHead().getDate().getDay(),
-                    30);
-        }else{
-            System.out.println(spectrum.getValidExt().getError());
-        }
-    }
-
-    @Test
-    public void testHead1() {
-        Date date = new Date(30, 3, 2016);
-        if (spectrum.getValidExt().getValidation()) {
-            assertEquals("We should get the Date",
-                    spectrum.getHead().getDate(), date);
-        }else{
-            System.out.println(spectrum.getValidExt().getError());
-        }
-    }
-
-    @Test
-    public void testHead2() {
-        Date date = new Date(30, 3, 2016);
-        Time time = new Time(11, 7, 14, "AM");
-        SpeMetaData meta = new SpeMetaData(date, time, 1345.57f, 1403.75f, 16384);
-        if (spectrum.getValidExt().getValidation()) {
-            assertEquals("We should get Head of Spectrum",
-                    spectrum.getHead(), meta);
-        }else{
-            System.out.println(spectrum.getValidExt().getError());
-        }
-    }
 
     @Test
     public void testCalibr() {
@@ -249,6 +204,7 @@ public class SpectrumAnalyserTest {
         assertEquals(thrown, true);
     }
 
+/* NEED TO REFACTOR TEST (INSERT READER)
     @Test
     public void testPrintSpectrum() {
         if (spectrum.getValidExt().getValidation()) {
@@ -281,4 +237,5 @@ public class SpectrumAnalyserTest {
         verify(spectrumMock, times(1)).nuclideLibSize();
 
     }
+    */
 }

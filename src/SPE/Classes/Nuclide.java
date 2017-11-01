@@ -1,6 +1,6 @@
 package SPE.Classes;
 
-import SPE.SpectrumException;
+import SPE.Exceptions.SpectrumException;
 
 import java.util.List;
 

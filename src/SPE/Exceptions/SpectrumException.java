@@ -1,4 +1,4 @@
-package SPE;
+package SPE.Exceptions;
 
 public class SpectrumException extends RuntimeException {
     private String str;

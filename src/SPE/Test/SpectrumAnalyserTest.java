@@ -4,12 +4,14 @@ package SPE.Test;
 import SPE.Classes.*;
 import SPE.Interfaces.Show;
 import SPE.Nuclides.Co57;
+import SPE.Read.SpectrumReader;
 import SPE.lmplementations.EnergyCalibrInterface;
 import SPE.Interfaces.Calibr;
 import SPE.Nuclides.Co60;
 import SPE.Spectrum;
 import SPE.Exceptions.SpectrumException;
 import SPE.lmplementations.PrintSpectrum;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -29,9 +31,15 @@ import static org.mockito.Mockito.*;
 public class SpectrumAnalyserTest {
     private static final String PATH =
             "C:\\JAVA\\SpectrumAnalisator\\src\\SPE\\Co60spe\\Co-60 2.spe";
-    private static final Spectrum spectrum = new Spectrum();
+
+    private final SpectrumReader reader = new SpectrumReader(PATH);
+    private Spectrum spectrum = new Spectrum();
 
 
+    @Before
+    public void readSpectrum(){
+        this.spectrum = this.reader.read();
+    }
 
     @Test
     public void testCalibr() {
@@ -204,15 +212,12 @@ public class SpectrumAnalyserTest {
         assertEquals(thrown, true);
     }
 
-/* NEED TO REFACTOR TEST (INSERT READER)
+
     @Test
     public void testPrintSpectrum() {
-        if (spectrum.getValidExt().getValidation()) {
             Show spe = new PrintSpectrum();
             spe.showSpectrum(spectrum);
-        }else{
-            System.out.println(spectrum.getValidExt().getError());
-        }
+
     }
 
     @Test
@@ -237,5 +242,5 @@ public class SpectrumAnalyserTest {
         verify(spectrumMock, times(1)).nuclideLibSize();
 
     }
-    */
+
 }

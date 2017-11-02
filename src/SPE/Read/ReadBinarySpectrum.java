@@ -23,13 +23,25 @@ public class ReadBinarySpectrum implements ReadSpectrum {
 
     @Override
     public String[] readHead() {
+        boolean thrown = false;
         List<String> head = new ArrayList<>();
         String readLine;
         String spectrumBegin[] = new String[2];
         spectrumBegin[0] = "";
         try {
             File f = new File(this.path);
-            BufferedReader b = new BufferedReader(new FileReader(f));
+            BufferedReader b = null;
+            try {
+                b = new BufferedReader(new FileReader(f));
+            }catch (FileNotFoundException e){
+                thrown = true;
+                System.out.println("File not found error");
+            }finally {
+                if(thrown) {
+                    System.exit(0);
+                }
+            }
+
             int counter = 0;
             while (!(spectrumBegin[0].equals("SPECTR"))) {
                 counter++;

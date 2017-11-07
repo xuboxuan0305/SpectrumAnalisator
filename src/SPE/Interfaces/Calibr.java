@@ -7,5 +7,5 @@ import java.util.List;
 public interface Calibr {
     EnergyCalibration calibrLessSquareMethod(
             List<Double> channels,
-            List<Double> counts);
+            List<Double> energy);
 }

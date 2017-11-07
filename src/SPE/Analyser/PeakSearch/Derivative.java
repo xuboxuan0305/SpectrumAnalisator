@@ -4,7 +4,11 @@ public class Derivative {
     private final int[] dSmooth = {-10,-7,-5,-3,-1,0,1,3,5,7,10};
     private int[] input;
 
-    public Derivative(int[] input) {
+    public Derivative() {
+        this.input = new int[11];
+    }
+
+    public void setInput(int[] input) {
         int size = input.length;
         boolean matrixMatch = size == dSmooth.length;
 

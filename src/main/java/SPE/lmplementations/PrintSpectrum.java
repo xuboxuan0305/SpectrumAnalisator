@@ -1,5 +1,6 @@
 package SPE.lmplementations;
 
+import SPE.Classes.ChannelsValues;
 import SPE.Interfaces.Show;
 import SPE.Spectrum;
 
@@ -14,7 +15,7 @@ public class PrintSpectrum implements Show {
     @Override
     public void showSpectrum(Spectrum spectrum) {
         List<Integer> sChannelsCounts = Arrays.stream(spectrum.getSpe())
-                .map(s -> s.getCounts())
+                .map(ChannelsValues::getCounts)
                 .collect(toList());
         int max = sChannelsCounts.stream()
                 .max(Integer::compare) //.max((i1,i2)-> Integer.compare(i1,i2)

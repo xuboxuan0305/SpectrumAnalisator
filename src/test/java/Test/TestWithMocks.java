@@ -1,9 +1,7 @@
-package SPE.Test;
+package Test;
 
 import SPE.Classes.ExtensionValidation;
-import SPE.Read.ChooseMethodToReadFile;
 import SPE.Read.SpectrumReader;
-import SPE.Spectrum;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;

@@ -1,13 +1,13 @@
 package Test;
 
-import SPE.Classes.Date;
-import SPE.Classes.SpeMetaData;
-import SPE.Classes.Time;
-import SPE.Interfaces.Show;
-import SPE.lmplementations.PrintSpectrum;
-import SPE.Read.ReadSpectrumFile;
-import SPE.Read.SpectrumReader;
-import SPE.Spectrum;
+import SpectrumApp.java.SPE.Classes.Date;
+import SpectrumApp.java.SPE.Classes.SpeMetaData;
+import SpectrumApp.java.SPE.Classes.Time;
+import SpectrumApp.java.SPE.Interfaces.Show;
+import SpectrumApp.java.SPE.lmplementations.PrintSpectrum;
+import SpectrumApp.java.SPE.Read.ReadSpectrumFile;
+import SpectrumApp.java.SPE.Read.SpectrumReader;
+import SpectrumApp.java.SPE.Spectrum;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

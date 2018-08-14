@@ -1,14 +1,13 @@
 package Test;
 
-import SPE.Analyser.PeakSearch.CheckForPeak;
-import SPE.Analyser.PeakSearch.Derivative;
-import SPE.Analyser.PeakSearch.PeakSearchDomain;
-import SPE.Interfaces.Calibr;
-import SPE.Nuclides.Co60;
-import SPE.Read.SpectrumReader;
-import SPE.Spectrum;
-import SPE.lmplementations.EnergyCalibrInterface;
-import org.junit.Before;
+import SpectrumApp.java.SPE.Analyser.PeakSearch.CheckForPeak;
+import SpectrumApp.java.SPE.Analyser.PeakSearch.Derivative;
+import SpectrumApp.java.SPE.Analyser.PeakSearch.PeakSearchDomain;
+import SpectrumApp.java.SPE.Interfaces.Calibr;
+import SpectrumApp.java.SPE.Nuclides.Co60;
+import SpectrumApp.java.SPE.Read.SpectrumReader;
+import SpectrumApp.java.SPE.Spectrum;
+import SpectrumApp.java.SPE.lmplementations.EnergyCalibrInterface;
 import org.junit.Test;
 
 import java.util.ArrayList;

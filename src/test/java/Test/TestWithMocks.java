@@ -1,7 +1,7 @@
 package Test;
 
-import SPE.Classes.ExtensionValidation;
-import SPE.Read.SpectrumReader;
+import SpectrumApp.java.SPE.Classes.ExtensionValidation;
+import SpectrumApp.java.SPE.Read.SpectrumReader;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;

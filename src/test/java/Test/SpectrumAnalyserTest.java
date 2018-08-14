@@ -1,25 +1,26 @@
 package Test;
 
 
-import SPE.Classes.*;
-import SPE.Interfaces.Show;
-import SPE.Nuclides.Co57;
-import SPE.Read.SpectrumReader;
-import SPE.lmplementations.EnergyCalibrInterface;
-import SPE.Interfaces.Calibr;
-import SPE.Nuclides.Co60;
-import SPE.Spectrum;
-import SPE.Exceptions.SpectrumException;
-import SPE.lmplementations.PrintSpectrum;
+import SpectrumApp.java.SPE.Classes.EnergyCalibration;
+import SpectrumApp.java.SPE.Classes.Nuclide;
+import SpectrumApp.java.SPE.Interfaces.Show;
+import SpectrumApp.java.SPE.Nuclides.Co57;
+import SpectrumApp.java.SPE.Read.SpectrumReader;
+import SpectrumApp.java.SPE.lmplementations.EnergyCalibrInterface;
+import SpectrumApp.java.SPE.Interfaces.Calibr;
+import SpectrumApp.java.SPE.Nuclides.Co60;
+import SpectrumApp.java.SPE.Spectrum;
+import SpectrumApp.java.SPE.Exceptions.SpectrumException;
+import SpectrumApp.java.SPE.lmplementations.PrintSpectrum;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static SPE.lmplementations.EnergyCalibrInterface.multArrays;
-import static SPE.lmplementations.EnergyCalibrInterface.sumArray;
-import static SPE.lmplementations.EnergyCalibrInterface.sumSquare;
+import static SpectrumApp.java.SPE.lmplementations.EnergyCalibrInterface.multArrays;
+import static SpectrumApp.java.SPE.lmplementations.EnergyCalibrInterface.sumArray;
+import static SpectrumApp.java.SPE.lmplementations.EnergyCalibrInterface.sumSquare;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static org.mockito.Mockito.*;

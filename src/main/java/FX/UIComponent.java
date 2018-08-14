@@ -8,8 +8,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import sun.plugin.dom.css.Counter;
+
+import java.io.File;
 
 
 public class UIComponent extends Application implements EventHandler<ActionEvent> {
@@ -17,6 +19,9 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
     Button buttonMinus;
     Label label;
     int counter = 0;
+    FileChooser fileChooser;
+    Stage globalPrimaryStage;
+    File selectedFile;
 
     public static void main(String[] args){
         launch(args);
@@ -24,6 +29,7 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        globalPrimaryStage = primaryStage;
         primaryStage.setTitle("Spectrum Analyser");
         StackPane layout = new StackPane();
 
@@ -32,10 +38,14 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         buttonPlus.setTranslateY(0);
         buttonPlus.setOnAction(this);
 
-        buttonMinus = new Button("Decrement");
+        buttonMinus = new Button("Browse File");
         buttonMinus.setTranslateX(10);
         buttonMinus.setTranslateY(50);
+//        buttonMinus.setOnAction(e -> fileChooser.showOpenDialog(primaryStage));
         buttonMinus.setOnAction(this);
+
+
+
 
         label = new Label();
         label.setTranslateX(10);
@@ -58,7 +68,9 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
             label.setText(Integer.toString(counter++));
         }
         else if (event.getSource() == buttonMinus){
-            label.setText(Integer.toString(counter--));
+            fileChooser = new FileChooser();
+            fileChooser.setInitialFileName("*.spe, *.txt");
+            selectedFile = fileChooser.showOpenDialog(globalPrimaryStage);
         }
     }
 }

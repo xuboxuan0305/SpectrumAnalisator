@@ -1,5 +1,10 @@
 package FX;
 
+import SPE.Interfaces.Show;
+import SPE.Read.ReadSpectrumFile;
+import SPE.Read.SpectrumReader;
+import SPE.Spectrum;
+import SPE.lmplementations.PrintSpectrum;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -12,16 +17,24 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.Objects;
 
 
 public class UIComponent extends Application implements EventHandler<ActionEvent> {
-    Button buttonPlus;
+
     Button buttonMinus;
     Label label;
-    int counter = 0;
     FileChooser fileChooser;
     Stage globalPrimaryStage;
     File selectedFile;
+
+    public void setPATH(String PATH) {
+        this.PATH = PATH;
+    }
+
+    private String PATH = "";
+    private Spectrum bSpectr;// = new Spectrum();
+    private ReadSpectrumFile reader;// = new SpectrumReader(PATH);
 
     public static void main(String[] args){
         launch(args);
@@ -33,10 +46,6 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         primaryStage.setTitle("Spectrum Analyser");
         StackPane layout = new StackPane();
 
-        buttonPlus = new Button("Increment");
-        buttonPlus.setTranslateX(10);
-        buttonPlus.setTranslateY(0);
-        buttonPlus.setOnAction(this);
 
         buttonMinus = new Button("Browse File");
         buttonMinus.setTranslateX(10);
@@ -51,12 +60,10 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         label.setTranslateX(10);
         label.setTranslateY(100);
 
-
-        layout.getChildren().add(buttonPlus);
         layout.getChildren().add(buttonMinus);
         layout.getChildren().add(label);
 
-        Scene scene = new Scene(layout, 300,250);
+        Scene scene = new Scene(layout, 300,300);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -64,13 +71,31 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
 
     @Override
     public void handle(ActionEvent event) {
-        if (event.getSource() == buttonPlus){
-            label.setText(Integer.toString(counter++));
-        }
-        else if (event.getSource() == buttonMinus){
+        String path = "";
+
+        if (event.getSource() == buttonMinus){ // choose file
             fileChooser = new FileChooser();
             fileChooser.setInitialFileName("*.spe, *.txt");
             selectedFile = fileChooser.showOpenDialog(globalPrimaryStage);
+            path = selectedFile.getAbsolutePath();
+        }
+
+        if (!Objects.equals(path, "")){ // if not empty
+            setPATH(path);
+            readSpectrum(path);
+        }
+
+    }
+
+    public void readSpectrum(String path){
+        ReadSpectrumFile reader = new SpectrumReader(PATH);
+        if (reader.isSpectrumSupported()){
+            label.setText("File format supported");
+            bSpectr = reader.read();
+            Show spe = new PrintSpectrum();
+            spe.showSpectrum(bSpectr);
+        }else {
+            label.setText("File format NOT supported");
         }
     }
 }

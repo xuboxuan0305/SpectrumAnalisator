@@ -3,6 +3,7 @@ package SpectrumApp.java.SPE.lmplementations;
 import SpectrumApp.java.SPE.Classes.ChannelsValues;
 import SpectrumApp.java.SPE.Interfaces.Show;
 import SpectrumApp.java.SPE.Spectrum;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
+@Component
 public class PrintSpectrum implements Show {
     private int fullScale = 50;
     @Override

@@ -13,9 +13,9 @@ import static java.util.stream.Collectors.toList;
 
 @Component
 public class PrintSpectrum implements Show {
-    private int fullScale = 50;
+    private int fullScale = 30;
     @Override
-    public void showSpectrum(Spectrum spectrum) {
+    public List<String[]> showSpectrum(Spectrum spectrum) {
         List<Integer> sChannelsCounts = Arrays.stream(spectrum.getSpe())
                 .map(ChannelsValues::getCounts)
                 .collect(toList());
@@ -26,8 +26,8 @@ public class PrintSpectrum implements Show {
         max = mList.stream()
                 .max(Integer::compare)
                 .get();
-        printSpectrum(max, mList);
-
+        List<String[]> list = printSpectrum(max, mList);
+        return list;
     }
 
     private List<Integer> minimize(List<Integer> spe, int max) {
@@ -53,11 +53,14 @@ public class PrintSpectrum implements Show {
         return mSpe;
     }
 
-    private void printSpectrum(int max, List<Integer> spectr) {
-        String[] aPrint = new String[spectr.size()];
+    private List<String[]> printSpectrum(int max, List<Integer> spectr) {
+        //String[] aPrint = new String[spectr.size()];
+        List<String[]> listSpectrum = new ArrayList<>();
         for (int i = max; i > 0; i--) {
             int k = 0;
+            String[] aPrint = new String[spectr.size()];
             for (Integer j : spectr) {
+
                 if (j >= i) {
                     aPrint[k] = "*";
                 } else {
@@ -66,7 +69,13 @@ public class PrintSpectrum implements Show {
                 System.out.print(aPrint[k]);
                 k++;
             }
+            listSpectrum.add(aPrint);
             System.out.println();
         }
+         return listSpectrum;
+    }
+
+    public void setFullScale(int fullScale) {
+        this.fullScale = fullScale;
     }
 }

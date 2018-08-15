@@ -2,6 +2,8 @@ package SpectrumApp.java.SPE.Interfaces;
 
 import SpectrumApp.java.SPE.Spectrum;
 
+import java.util.List;
+
 public interface Show {
-    void showSpectrum(Spectrum spectrum);
+    List<String[]> showSpectrum(Spectrum spectrum);
 }

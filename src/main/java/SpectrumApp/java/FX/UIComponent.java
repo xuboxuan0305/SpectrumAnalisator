@@ -20,6 +20,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -27,11 +28,10 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
 
     Button buttonMinus;
     Label label;
+    Label labelSpe;
     FileChooser fileChooser;
     Stage globalPrimaryStage;
     File selectedFile;
-
-    @Autowired
     Show show;
 
     private String PATH = "";
@@ -67,9 +67,16 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         label.setTranslateX(10);
         label.setTranslateY(100);
 
+        //Label
+        labelSpe = new Label();
+        labelSpe.setTranslateX(10);
+        labelSpe.setTranslateY(-100);
+        labelSpe.setText("Spectrum");
+
         //Add components
         layout.getChildren().add(buttonMinus);
         layout.getChildren().add(label);
+        layout.getChildren().add(labelSpe);
 
         //Scene deploy
         Scene scene = new Scene(layout, 300,300);
@@ -104,8 +111,10 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         if (reader.isSpectrumSupported()){ // if supported
             label.setText("File format supported, reading ...");
             bSpectr = reader.read();
-            Show spe = new PrintSpectrum();
-            spe.showSpectrum(bSpectr);
+            Show spe = new PrintSpectrum();// init
+            List<String[]> spectrumList = spe.showSpectrum(bSpectr);// get list
+            String spectrumString = convert2String(spectrumList);
+            labelSpe.setText(spectrumString);
             label.setText(label.getText() + "\nReading Complete");
         }else { // if not
             label.setText("File format NOT supported");
@@ -114,5 +123,19 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
 
     public void setPATH(String PATH) {
         this.PATH = PATH;
+    }
+
+    private String convert2String(List<String[]> listArr){
+        StringBuffer stringBuffer = new StringBuffer();
+
+        for (int i = listArr.size()-1; i > 0; i--){//String[] aS : listArr) {
+            String[] aS = listArr.get(i);
+            for (String s :aS) {
+              stringBuffer.append(s);
+            }
+            stringBuffer.append("\n");
+        }
+
+        return stringBuffer.toString();
     }
 }

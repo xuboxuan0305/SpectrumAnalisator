@@ -57,7 +57,7 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         // Button browse
         buttonMinus = new Button("Browse File");
         buttonMinus.setTranslateX(10);
-        buttonMinus.setTranslateY(50);
+        buttonMinus.setTranslateY(70);
 //        buttonMinus.setOnAction(e -> fileChooser.showOpenDialog(primaryStage));
         buttonMinus.setOnAction(this);
 
@@ -70,7 +70,7 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         //Label
         labelSpe = new Label();
         labelSpe.setTranslateX(10);
-        labelSpe.setTranslateY(-100);
+        labelSpe.setTranslateY(-200);
         labelSpe.setText("Spectrum");
 
         //Add components
@@ -79,7 +79,7 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         layout.getChildren().add(labelSpe);
 
         //Scene deploy
-        Scene scene = new Scene(layout, 300,300);
+        Scene scene = new Scene(layout, 1000,900);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -111,10 +111,14 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         if (reader.isSpectrumSupported()){ // if supported
             label.setText("File format supported, reading ...");
             bSpectr = reader.read();
+
             Show spe = new PrintSpectrum();// init
-            List<String[]> spectrumList = spe.showSpectrum(bSpectr);// get list
-            String spectrumString = convert2String(spectrumList);
-            labelSpe.setText(spectrumString);
+            List<String[]> spectrumList = spe.showSpectrum(bSpectr);// get list for Label
+            String spectrumString = convert2String(spectrumList);// prepare output for label
+            labelSpe.setText(spectrumString); // set label
+
+            //using xy chart
+            List<Integer> miniSpectrum = ((PrintSpectrum) spe).getMiniSpectrum(); // xy chart ..
             label.setText(label.getText() + "\nReading Complete");
         }else { // if not
             label.setText("File format NOT supported");
@@ -128,8 +132,8 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
     private String convert2String(List<String[]> listArr){
         StringBuffer stringBuffer = new StringBuffer();
 
-        for (int i = listArr.size()-1; i > 0; i--){//String[] aS : listArr) {
-            String[] aS = listArr.get(i);
+        for (String[] aS : listArr){
+
             for (String s :aS) {
               stringBuffer.append(s);
             }

@@ -14,6 +14,8 @@ import static java.util.stream.Collectors.toList;
 @Component
 public class PrintSpectrum implements Show {
     private int fullScale = 30;
+    private List<Integer> miniSpectrum;
+
     @Override
     public List<String[]> showSpectrum(Spectrum spectrum) {
         List<Integer> sChannelsCounts = Arrays.stream(spectrum.getSpe())
@@ -50,6 +52,7 @@ public class PrintSpectrum implements Show {
             }
 
         }
+        this.miniSpectrum = mSpe;
         return mSpe;
     }
 
@@ -64,7 +67,7 @@ public class PrintSpectrum implements Show {
                 if (j >= i) {
                     aPrint[k] = "*";
                 } else {
-                    aPrint[k] = " ";
+                    aPrint[k] = "_";
                 }
                 System.out.print(aPrint[k]);
                 k++;
@@ -77,5 +80,9 @@ public class PrintSpectrum implements Show {
 
     public void setFullScale(int fullScale) {
         this.fullScale = fullScale;
+    }
+
+    public List<Integer> getMiniSpectrum() {
+        return this.miniSpectrum;
     }
 }

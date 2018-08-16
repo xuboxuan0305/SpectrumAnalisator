@@ -10,13 +10,14 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.ScatterChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -34,7 +35,10 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
     Stage globalPrimaryStage;
     File selectedFile;
     Show show;
-    ScatterChart<Number,Number> scatterChart;
+    LineChart<Number,Number> scatterChart;
+    Scene scene;
+    Scene sceneSpe;
+    Chart chart = new Chart("","",30);
 
     private String PATH = "";
     private Spectrum bSpectr;// = new Spectrum();
@@ -55,6 +59,7 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         globalPrimaryStage = primaryStage;
         primaryStage.setTitle("Spectrum Analyser");
         StackPane layout = new StackPane();
+        StackPane layoutSpe = new StackPane();
 
         // Button browse
         buttonMinus = new Button("Browse File");
@@ -76,17 +81,27 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         labelSpe.setText("Spectrum");
 
         //Chart init:
-        Chart chart = new Chart("","");
         this.scatterChart = chart.getScatterChart();
+        layoutSpe.getChildren().add(this.scatterChart);
+
+        //button for chart
+        Button backButton = new Button("Back");
+        backButton.setTranslateX(-220);
+        backButton.setTranslateY(220);
+        layoutSpe.getChildren().add(backButton);
+        backButton.setOnAction(e -> primaryStage.setScene(scene));
+
+
 
         //Add components
         layout.getChildren().add(buttonMinus);
         layout.getChildren().add(label);
         layout.getChildren().add(labelSpe);
-//        layout.getChildren().add(scatterChart);
 
         //Scene deploy
-        Scene scene = new Scene(layout, 1000,900);
+        this.scene = new Scene(layout, 1000,900); // main
+        this.sceneSpe = new Scene(layoutSpe, 500,500); // graph
+        sceneSpe.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -109,6 +124,7 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         if (!Objects.equals(path, "")){ // if not empty
             setPATH(path); //set global path to file
             readSpectrum(); //read spectrum
+            globalPrimaryStage.setScene(sceneSpe);
         }
 
     }
@@ -125,9 +141,11 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
             labelSpe.setText(spectrumString); // set label
 
             //using xy chart
-            List<Integer> miniSpectrum = ((PrintSpectrum) spe).getMiniSpectrum(); // xy chart ..
+            this.scatterChart.getData().clear(); // clear plot
+            List<Integer> miniSpectrum = ((PrintSpectrum) spe).getMiniSpectrum(); // get list of xy
+            this.scatterChart.getData().add(this.chart.applyData(miniSpectrum));// apply data
 
-            label.setText(label.getText() + "\nReading Complete");
+            label.setText(label.getText() + "\nReading Complete");// set to complete
         }else { // if not
             label.setText("File format NOT supported");
         }

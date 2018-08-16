@@ -10,6 +10,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -33,6 +34,7 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
     Stage globalPrimaryStage;
     File selectedFile;
     Show show;
+    ScatterChart<Number,Number> scatterChart;
 
     private String PATH = "";
     private Spectrum bSpectr;// = new Spectrum();
@@ -73,10 +75,15 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         labelSpe.setTranslateY(-200);
         labelSpe.setText("Spectrum");
 
+        //Chart init:
+        Chart chart = new Chart("","");
+        this.scatterChart = chart.getScatterChart();
+
         //Add components
         layout.getChildren().add(buttonMinus);
         layout.getChildren().add(label);
         layout.getChildren().add(labelSpe);
+//        layout.getChildren().add(scatterChart);
 
         //Scene deploy
         Scene scene = new Scene(layout, 1000,900);
@@ -119,6 +126,7 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
 
             //using xy chart
             List<Integer> miniSpectrum = ((PrintSpectrum) spe).getMiniSpectrum(); // xy chart ..
+
             label.setText(label.getText() + "\nReading Complete");
         }else { // if not
             label.setText("File format NOT supported");
@@ -130,7 +138,7 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
     }
 
     private String convert2String(List<String[]> listArr){
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuffer = new StringBuilder();
 
         for (String[] aS : listArr){
 

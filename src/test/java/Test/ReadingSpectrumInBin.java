@@ -36,7 +36,7 @@ public class ReadingSpectrumInBin {
 
     @After
     public void showSpectrum(){
-        Show spe = new PrintSpectrum();
+        Show spe = new PrintSpectrum(50);
         spe.showSpectrum(bSpectr);
     }
 

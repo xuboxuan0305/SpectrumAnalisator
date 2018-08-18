@@ -30,7 +30,6 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
 
     Button buttonMinus;
     Label label;
-    Label labelSpe;
     FileChooser fileChooser;
     Stage globalPrimaryStage;
     File selectedFile;
@@ -38,7 +37,7 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
     LineChart<Number,Number> scatterChart;
     Scene scene;
     Scene sceneSpe;
-    Chart chart = new Chart("","",30);
+    Chart chart = new Chart("","",60, "line");
 
     private String PATH = "";
     private Spectrum bSpectr;// = new Spectrum();
@@ -68,40 +67,36 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
 //        buttonMinus.setOnAction(e -> fileChooser.showOpenDialog(primaryStage));
         buttonMinus.setOnAction(this);
 
-
         //Label
         label = new Label();
         label.setTranslateX(10);
         label.setTranslateY(100);
 
-        //Label
-        labelSpe = new Label();
-        labelSpe.setTranslateX(10);
-        labelSpe.setTranslateY(-200);
-        labelSpe.setText("Spectrum");
 
         //Chart init:
         this.scatterChart = chart.getScatterChart();
+        this.scatterChart.setMaxHeight(500);
+        this.scatterChart.setMaxWidth(500);
+        this.scatterChart.setTranslateY(-200);
+        this.scatterChart.setTranslateX(10);
+
         layoutSpe.getChildren().add(this.scatterChart);
 
-        //button for chart
-        Button backButton = new Button("Back");
-        backButton.setTranslateX(-220);
-        backButton.setTranslateY(220);
-        layoutSpe.getChildren().add(backButton);
-        backButton.setOnAction(e -> primaryStage.setScene(scene));
+//        //button for chart
+//        Button backButton = new Button("Back");
+//        backButton.setTranslateX(-220);
+//        backButton.setTranslateY(220);
+//        layoutSpe.getChildren().add(backButton);
+//        backButton.setOnAction(e -> primaryStage.setScene(scene));
 
 
 
         //Add components
-        layout.getChildren().add(buttonMinus);
-        layout.getChildren().add(label);
-        layout.getChildren().add(labelSpe);
+        layout.getChildren().addAll(buttonMinus,label,scatterChart);
 
         //Scene deploy
         this.scene = new Scene(layout, 1000,900); // main
-        this.sceneSpe = new Scene(layoutSpe, 500,500); // graph
-        sceneSpe.getStylesheets().add("style.css");
+        this.scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -124,7 +119,7 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         if (!Objects.equals(path, "")){ // if not empty
             setPATH(path); //set global path to file
             readSpectrum(); //read spectrum
-            globalPrimaryStage.setScene(sceneSpe);
+            //globalPrimaryStage.setScene(sceneSpe);
         }
 
     }
@@ -135,10 +130,9 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
             label.setText("File format supported, reading ...");
             bSpectr = reader.read();
 
-            Show spe = new PrintSpectrum();// init
-            List<String[]> spectrumList = spe.showSpectrum(bSpectr);// get list for Label
-            String spectrumString = convert2String(spectrumList);// prepare output for label
-            labelSpe.setText(spectrumString); // set label
+            Show spe = new PrintSpectrum(60);// init
+
+            List<String[]> spectrumList = spe.showSpectrum(bSpectr);// get list of values
 
             //using xy chart
             this.scatterChart.getData().clear(); // clear plot
@@ -155,17 +149,4 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         this.PATH = PATH;
     }
 
-    private String convert2String(List<String[]> listArr){
-        StringBuilder stringBuffer = new StringBuilder();
-
-        for (String[] aS : listArr){
-
-            for (String s :aS) {
-              stringBuffer.append(s);
-            }
-            stringBuffer.append("\n");
-        }
-
-        return stringBuffer.toString();
-    }
 }

@@ -1,3 +1,8 @@
 .default-color0.chart-series-line { -fx-stroke: blue; }
 .default-color1.chart-series-line { -fx-stroke: yellow; }
 .default-color2.chart-series-line { -fx-stroke: brown; }
+
+.default-color0.chart-line-symbol {
+    -fx-background-radius: 0.0px;
+    -fx-padding: 0.0px;
+}

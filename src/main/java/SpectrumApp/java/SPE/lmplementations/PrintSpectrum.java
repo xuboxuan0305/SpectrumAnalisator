@@ -13,8 +13,14 @@ import static java.util.stream.Collectors.toList;
 
 @Component
 public class PrintSpectrum implements Show {
-    private int fullScale = 30;
+    private int fullScale;
     private List<Integer> miniSpectrum;
+
+    public PrintSpectrum(){};
+
+    public PrintSpectrum(int fullScale) {
+        this.fullScale = fullScale;
+    }
 
     @Override
     public List<String[]> showSpectrum(Spectrum spectrum) {

@@ -12,13 +12,20 @@ public class Chart {
     private NumberAxis yAxis;
     private LineChart<Number, Number> scatterChart;
 
-    public Chart(String xName, String yName, int upperBound) {
-        this.xAxis = new NumberAxis(0, 163, 3);
-        xAxis.setLabel(xName);
-        this.yAxis = new NumberAxis(0, upperBound, 3);
-        xAxis.setLabel(yName);
-        this.scatterChart = new LineChart(xAxis, yAxis);
-        scatterChart.setLegendVisible(false);
+    public Chart(String xName, String yName, int upperBound, String graphType) {
+        switch (graphType){
+            case "line":
+                this.xAxis = new NumberAxis(0, 163, 3);
+                xAxis.setLabel(xName);
+                this.yAxis = new NumberAxis(0, upperBound, 3);
+                xAxis.setLabel(yName);
+                this.scatterChart = new LineChart(xAxis, yAxis);
+                scatterChart.setLegendVisible(false);
+                break;
+            case "bar":
+                break;
+        }
+
     }
 
     public LineChart<Number, Number> getScatterChart() {

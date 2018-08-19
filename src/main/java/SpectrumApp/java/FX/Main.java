@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class UIComponent extends Application implements EventHandler<ActionEvent> {
+public class Main extends Application implements EventHandler<ActionEvent> {
 
     Button buttonMinus;
     Label label;

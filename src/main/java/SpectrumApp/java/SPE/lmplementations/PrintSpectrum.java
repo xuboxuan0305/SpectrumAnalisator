@@ -15,11 +15,17 @@ import static java.util.stream.Collectors.toList;
 public class PrintSpectrum implements Show {
     private int fullScale;
     private List<Integer> miniSpectrum;
+    private boolean printSpectrumInConsole = false;
 
-    public PrintSpectrum(){};
+    public PrintSpectrum() {
+    }
 
     public PrintSpectrum(int fullScale) {
         this.fullScale = fullScale;
+    }
+
+    public void setPrintSpectrumInConsole(boolean printSpectrumInConsole) {
+        this.printSpectrumInConsole = printSpectrumInConsole;
     }
 
     @Override
@@ -34,8 +40,16 @@ public class PrintSpectrum implements Show {
         max = mList.stream()
                 .max(Integer::compare)
                 .get();
-        List<String[]> list = printSpectrum(max, mList);
-        return list;
+        if (printSpectrumInConsole) { // print in console if set
+            return printSpectrum(max, mList);
+        }else {
+//          just to ensure we dont get any null pointer error
+            List<String[]> dummyList = new ArrayList<>();
+            String[] dummStringArr = new String[1];
+            dummStringArr[0] = "Flag to print Spectrum in Console is not set";
+            dummyList.add(dummStringArr);
+            return dummyList;
+        }
     }
 
     private List<Integer> minimize(List<Integer> spe, int max) {
@@ -75,13 +89,14 @@ public class PrintSpectrum implements Show {
                 } else {
                     aPrint[k] = "_";
                 }
+
                 System.out.print(aPrint[k]);
                 k++;
             }
             listSpectrum.add(aPrint);
             System.out.println();
         }
-         return listSpectrum;
+        return listSpectrum;
     }
 
     public void setFullScale(int fullScale) {

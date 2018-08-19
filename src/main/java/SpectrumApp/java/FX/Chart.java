@@ -18,7 +18,7 @@ public class Chart {
                 this.xAxis = new NumberAxis(0, 163, 3);
                 xAxis.setLabel(xName);
                 this.yAxis = new NumberAxis(0, upperBound, 3);
-                xAxis.setLabel(yName);
+                yAxis.setLabel(yName);
                 this.scatterChart = new LineChart(xAxis, yAxis);
                 scatterChart.setLegendVisible(false);
                 break;

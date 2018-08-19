@@ -34,7 +34,8 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
     Show show;
     LineChart<Number,Number> scatterChart;
     Scene scene;
-    Chart chart = new Chart("","",60, "line");
+    Chart chart;
+    int chartYScaleMax = 1000;
 
     private String PATH = "";
     private Spectrum bSpectr;// = new Spectrum();
@@ -60,17 +61,18 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
         // Button browse
         buttonMinus = new Button("Browse File");
         buttonMinus.setTranslateX(10);
-        buttonMinus.setTranslateY(70);
+        buttonMinus.setTranslateY(90);
 //        buttonMinus.setOnAction(e -> fileChooser.showOpenDialog(primaryStage));
         buttonMinus.setOnAction(this);
 
         //Label
-        label = new Label();
+        label = new Label("Data");
         label.setTranslateX(10);
-        label.setTranslateY(100);
+        label.setTranslateY(120);
 
 
         //Chart init:
+        this.chart = new Chart("Channels/100","Counts [Normalized]",chartYScaleMax, "line");
         this.scatterChart = chart.getScatterChart();
         this.scatterChart.visibleProperty().setValue(false);
         this.scatterChart.setMaxHeight(500);
@@ -120,9 +122,10 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
             label.setText("File format supported, reading ...");
             bSpectr = reader.read();
 
-            Show spe = new PrintSpectrum(60);// init
+            Show spe = new PrintSpectrum(chartYScaleMax);// init
 
-            List<String[]> spectrumList = spe.showSpectrum(bSpectr);// get list of values
+//            List<String[]> spectrumList = spe.showSpectrum(bSpectr);// get list of values
+            spe.showSpectrum(bSpectr);// get list of values
 
             //using xy chart
             this.scatterChart.visibleProperty().setValue(true);

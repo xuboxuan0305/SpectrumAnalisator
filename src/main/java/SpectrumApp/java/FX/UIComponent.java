@@ -11,8 +11,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.ScatterChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -36,7 +34,6 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
     Show show;
     LineChart<Number,Number> scatterChart;
     Scene scene;
-    Scene sceneSpe;
     Chart chart = new Chart("","",60, "line");
 
     private String PATH = "";
@@ -75,21 +72,14 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
 
         //Chart init:
         this.scatterChart = chart.getScatterChart();
+        this.scatterChart.visibleProperty().setValue(false);
         this.scatterChart.setMaxHeight(500);
-        this.scatterChart.setMaxWidth(500);
+        this.scatterChart.setMaxWidth(800);
         this.scatterChart.setTranslateY(-200);
         this.scatterChart.setTranslateX(10);
 
         layoutSpe.getChildren().add(this.scatterChart);
-
-//        //button for chart
-//        Button backButton = new Button("Back");
-//        backButton.setTranslateX(-220);
-//        backButton.setTranslateY(220);
-//        layoutSpe.getChildren().add(backButton);
 //        backButton.setOnAction(e -> primaryStage.setScene(scene));
-
-
 
         //Add components
         layout.getChildren().addAll(buttonMinus,label,scatterChart);
@@ -135,6 +125,7 @@ public class UIComponent extends Application implements EventHandler<ActionEvent
             List<String[]> spectrumList = spe.showSpectrum(bSpectr);// get list of values
 
             //using xy chart
+            this.scatterChart.visibleProperty().setValue(true);
             this.scatterChart.getData().clear(); // clear plot
             List<Integer> miniSpectrum = ((PrintSpectrum) spe).getMiniSpectrum(); // get list of xy
             this.scatterChart.getData().add(this.chart.applyData(miniSpectrum));// apply data

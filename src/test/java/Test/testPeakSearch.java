@@ -21,7 +21,7 @@ public class testPeakSearch {
     private Derivative x;
     private Spectrum spectrum = new Spectrum();
     private static final String PATH =
-            "C:\\Java\\SpectrumAnalisator\\src\\main\\java\\SPE\\Co60spe\\Co-60 2.spe";
+            "C:\\Java\\SpectrumAnalisator\\src\\main\\java\\SpectrumApp\\java\\SPE\\Co60spe\\Co-60 2.spe";
     private final SpectrumReader reader = new SpectrumReader(PATH);
 
 

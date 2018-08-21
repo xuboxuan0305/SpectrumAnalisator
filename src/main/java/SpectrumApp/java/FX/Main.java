@@ -31,6 +31,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     Button exitButton;
 
     Label label;
+    Label labelHead;
     FileChooser fileChooser;
     Stage globalPrimaryStage;
     File selectedFile;
@@ -76,9 +77,14 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 //        exitButton.setOnAction(this);
 
         //Label
-        label = new Label("Data");
+        label = new Label("Info:");
         label.setTranslateX(10);
         label.setTranslateY(120);
+
+        //Label
+        labelHead = new Label("Data:");
+        labelHead.setTranslateX(-420);
+        labelHead.setTranslateY(-50);
 
 
         //Chart init:
@@ -94,7 +100,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 //        backButton.setOnAction(e -> primaryStage.setScene(scene));
 
         //Add components
-        layout.getChildren().addAll(buttonBrowse,exitButton,label,scatterChart);
+        layout.getChildren().addAll(buttonBrowse,exitButton,label,labelHead,scatterChart);
 
         //Scene deploy
         this.scene = new Scene(layout, 1000,900); // main
@@ -130,12 +136,12 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         ReadSpectrumFile reader = new SpectrumReader(PATH);
         if (reader.isSpectrumSupported()){ // if supported
             label.setText("File format supported, reading ...");
-            bSpectr = reader.read();
+            this.bSpectr = reader.read();
 
             Show spe = new PrintSpectrum(chartYScaleMax);// init
 
 //            List<String[]> spectrumList = spe.showSpectrum(bSpectr);// get list of values
-            spe.showSpectrum(bSpectr);// get list of values
+            spe.showSpectrum(this.bSpectr);// get list of values
 
             //using xy chart
             this.scatterChart.visibleProperty().setValue(true);
@@ -143,7 +149,9 @@ public class Main extends Application implements EventHandler<ActionEvent> {
             List<Integer> miniSpectrum = ((PrintSpectrum) spe).getMiniSpectrum(); // get list of xy
             this.scatterChart.getData().add(this.chart.applyData(miniSpectrum));// apply data
 
+            //set labels
             label.setText(label.getText() + "\nReading Complete");// set to complete
+            labelHead.setText(this.bSpectr.getHead().toString());
         }else { // if not
             label.setText("File format NOT supported");
         }

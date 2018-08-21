@@ -5,10 +5,24 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>SpectrumAnalisator</groupId>
-    <artifactId>java</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>SpeApp</artifactId>
+    <version>1.0</version>
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>SpectrumApp.java.FX.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

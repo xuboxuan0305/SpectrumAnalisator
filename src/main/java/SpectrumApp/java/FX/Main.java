@@ -7,6 +7,7 @@ import SpectrumApp.java.SPE.Read.SpectrumReader;
 import SpectrumApp.java.SPE.Spectrum;
 import SpectrumApp.java.SPE.lmplementations.PrintSpectrum;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -26,7 +27,9 @@ import java.util.Objects;
 
 public class Main extends Application implements EventHandler<ActionEvent> {
 
-    Button buttonMinus;
+    Button buttonBrowse;
+    Button exitButton;
+
     Label label;
     FileChooser fileChooser;
     Stage globalPrimaryStage;
@@ -59,11 +62,18 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         StackPane layoutSpe = new StackPane();
 
         // Button browse
-        buttonMinus = new Button("Browse File");
-        buttonMinus.setTranslateX(10);
-        buttonMinus.setTranslateY(90);
-//        buttonMinus.setOnAction(e -> fileChooser.showOpenDialog(primaryStage));
-        buttonMinus.setOnAction(this);
+        buttonBrowse = new Button("Browse File");
+        buttonBrowse.setTranslateX(10);
+        buttonBrowse.setTranslateY(90);
+//        buttonBrowse.setOnAction(e -> fileChooser.showOpenDialog(primaryStage));
+        buttonBrowse.setOnAction(this);
+
+        // Button browse
+        exitButton = new Button("Exit");
+        exitButton.setTranslateX(100);
+        exitButton.setTranslateY(90);
+        exitButton.setOnAction(e -> Platform.exit());
+//        exitButton.setOnAction(this);
 
         //Label
         label = new Label("Data");
@@ -84,7 +94,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 //        backButton.setOnAction(e -> primaryStage.setScene(scene));
 
         //Add components
-        layout.getChildren().addAll(buttonMinus,label,scatterChart);
+        layout.getChildren().addAll(buttonBrowse,exitButton,label,scatterChart);
 
         //Scene deploy
         this.scene = new Scene(layout, 1000,900); // main
@@ -99,7 +109,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         String path = "";
 
         //button click event
-        if (event.getSource() == buttonMinus){ // choose file
+        if (event.getSource() == buttonBrowse){ // choose file
             fileChooser = new FileChooser();
             fileChooser.setInitialFileName("*.spe, *.txt");
             selectedFile = fileChooser.showOpenDialog(globalPrimaryStage);

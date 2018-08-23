@@ -1,6 +1,7 @@
 package SpectrumApp.java.FX;
 
 import SpectrumApp.java.Config.SpringApplicationConfig;
+import SpectrumApp.java.SPE.Analyser.PeakSearch.PeakSearchDomain;
 import SpectrumApp.java.SPE.Interfaces.Show;
 import SpectrumApp.java.SPE.Read.ReadSpectrumFile;
 import SpectrumApp.java.SPE.Read.SpectrumReader;
@@ -14,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -22,22 +24,23 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
 
 public class Main extends Application implements EventHandler<ActionEvent> {
 
-    Button buttonBrowse;
-    Button exitButton;
+    Button buttonBrowse,exitButton,peakSearch;
 
-    Label label;
-    Label labelHead;
+    Label label,labelHead;
+
     FileChooser fileChooser;
     Stage globalPrimaryStage;
     File selectedFile;
     Show show;
-    LineChart<Number,Number> scatterChart;
+    LineChart<Number, Number> scatterChart;
+
     Scene scene;
+    TextField textField;
+
     Chart chart;
     int chartYScaleMax = 1000;
 
@@ -45,7 +48,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     private Spectrum bSpectr;// = new Spectrum();
     private ReadSpectrumFile reader;// = new SpectrumReader(PATH);
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         launch(args);
     }
 
@@ -69,12 +72,26 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 //        buttonBrowse.setOnAction(e -> fileChooser.showOpenDialog(primaryStage));
         buttonBrowse.setOnAction(this);
 
-        // Button browse
+        // Button exit
         exitButton = new Button("Exit");
         exitButton.setTranslateX(100);
         exitButton.setTranslateY(90);
         exitButton.setOnAction(e -> Platform.exit());
-//        exitButton.setOnAction(this);
+
+        // Button peakSearch
+        peakSearch = new Button("PeakSearch");
+        peakSearch.setTranslateX(-100);
+        peakSearch.setTranslateY(90);
+        peakSearch.setVisible(false);
+        peakSearch.setOnAction(this);
+
+        // Text Field
+        textField = new TextField("100");
+        textField.setMaxSize(45,10);
+        textField.setTranslateX(-160);
+        textField.setTranslateY(90);
+        textField.setVisible(false);
+
 
         //Label
         label = new Label("Info:");
@@ -88,7 +105,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
 
         //Chart init:
-        this.chart = new Chart("Channels/100","Counts [Normalized]",chartYScaleMax, "line");
+        this.chart = new Chart("Channels/100", "Counts [Normalized]", chartYScaleMax, "line");
         this.scatterChart = chart.getScatterChart();
         this.scatterChart.visibleProperty().setValue(false);
         this.scatterChart.setMaxHeight(500);
@@ -100,10 +117,16 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 //        backButton.setOnAction(e -> primaryStage.setScene(scene));
 
         //Add components
-        layout.getChildren().addAll(buttonBrowse,exitButton,label,labelHead,scatterChart);
+        layout.getChildren().addAll(buttonBrowse,
+                peakSearch,
+                exitButton,
+                textField,
+                label,
+                labelHead,
+                scatterChart);
 
         //Scene deploy
-        this.scene = new Scene(layout, 1000,900); // main
+        this.scene = new Scene(layout, 1000, 900); // main
         this.scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -115,30 +138,60 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         String path = "";
 
         //button click event
-        if (event.getSource() == buttonBrowse){ // choose file
-            fileChooser = new FileChooser();
-            fileChooser.setInitialFileName("*.spe, *.txt");
-            selectedFile = fileChooser.showOpenDialog(globalPrimaryStage);
-            if (selectedFile != null) {
-                path = selectedFile.getAbsolutePath();
+        if (event.getSource() == this.buttonBrowse) { // choose file
+            this.fileChooser = new FileChooser();
+            this.fileChooser.setInitialFileName("*.spe, *.txt");
+            this.fileChooser.setInitialDirectory(
+                    new File("C:\\Java\\SpectrumAnalisator\\src\\main\\java\\SpectrumApp\\java\\SPE\\Co60spe"));
+
+            this.selectedFile = this.fileChooser.showOpenDialog(this.globalPrimaryStage);
+            if (this.selectedFile != null) {
+                path = this.selectedFile.getAbsolutePath();
             }
         }
 
-        if (!Objects.equals(path, "")){ // if not empty
+        if (!path.equals("")) { // if not empty
             setPATH(path); //set global path to file
             readSpectrum(); //read spectrum
             //globalPrimaryStage.setScene(sceneSpe);
         }
 
+        //peak search
+        if (event.getSource() == this.peakSearch) {
+            if (this.bSpectr == null) {
+                this.label.setText("Error, no spectrum found");
+            } else {
+                PeakSearchDomain peakSearchDomain = new PeakSearchDomain(this.bSpectr);
+                int ampTresh = Integer.parseInt(this.textField.getText());
+                peakSearchDomain.setSearchParameters(ampTresh, 100, 100, 16000);
+                //show new scene with parameters ...
+                //...............................//
+
+
+                List<Integer> peaks = peakSearchDomain.execute();
+                if (peaks.size() == 2) { //for cobalt60
+                    for (int i = 0; i < peaks.size(); i++) {
+                        this.labelHead.setText(
+                                this.labelHead.getText() + "\nPeak #" + i + " Channel: " + peaks.get(i));
+                    }
+                } else if (peaks.size() == 0) {
+                    this.labelHead.setText(
+                            this.labelHead.getText() + "\nNothing Found");
+                } else if (peaks.size() > 2) {
+                    this.labelHead.setText(
+                            this.labelHead.getText() + "\nToo many peaks found, \nincrease threshold");
+                }
+            }
+        }
     }
 
-    public void readSpectrum(){
+    private void readSpectrum() {
         ReadSpectrumFile reader = new SpectrumReader(PATH);
-        if (reader.isSpectrumSupported()){ // if supported
-            label.setText("File format supported, reading ...");
+        if (reader.isSpectrumSupported()) { // if supported
+            this.label.setText("File format supported, reading ...");
             this.bSpectr = reader.read();
 
-            Show spe = new PrintSpectrum(chartYScaleMax);// init
+            Show spe = new PrintSpectrum(this.chartYScaleMax);// init
 
 //            List<String[]> spectrumList = spe.showSpectrum(bSpectr);// get list of values
             spe.showSpectrum(this.bSpectr);// get list of values
@@ -150,14 +203,19 @@ public class Main extends Application implements EventHandler<ActionEvent> {
             this.scatterChart.getData().add(this.chart.applyData(miniSpectrum));// apply data
 
             //set labels
-            label.setText(label.getText() + "\nReading Complete");// set to complete
-            labelHead.setText(this.bSpectr.getHead().toString());
-        }else { // if not
-            label.setText("File format NOT supported");
+            this.label.setText(this.label.getText() + "\nReading Complete");// set to complete
+            this.labelHead.setText(this.bSpectr.getHead().toString());
+
+            //enable peakSearch button & text field (search param)
+            this.peakSearch.setVisible(true);
+            this.textField.setVisible(true);
+
+        } else { // if not
+            this.label.setText("File format NOT supported");
         }
     }
 
-    public void setPATH(String PATH) {
+    private void setPATH(String PATH) {
         this.PATH = PATH;
     }
 

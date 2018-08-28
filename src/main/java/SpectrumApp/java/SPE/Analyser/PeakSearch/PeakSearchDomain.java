@@ -18,6 +18,15 @@ public class PeakSearchDomain implements FindPeaks {
         this.spectrum = spectrum;
     }
 
+    public PeakSearchDomain() {
+        this.checkForPeak = new CheckForPeak();
+        this.derivative = new Derivative();
+    }
+
+    public void setSpectrum(Spectrum spectrum) {
+        this.spectrum = spectrum;
+    }
+
     @Override
     public List<Integer> execute() {
         int[] signal = getSignal();

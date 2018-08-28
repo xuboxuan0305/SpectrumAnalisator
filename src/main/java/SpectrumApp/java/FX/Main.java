@@ -48,6 +48,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     private Spectrum bSpectr;// = new Spectrum();
     private ReadSpectrumFile reader;// = new SpectrumReader(PATH);
 
+    private PeakSerchParamWin peakSerchParamWin;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -84,6 +86,9 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         peakSearch.setTranslateY(90);
         peakSearch.setVisible(false);
         peakSearch.setOnAction(this);
+//        peakSerchParamWin = new PeakSerchParamWin(this.scene, this.globalPrimaryStage);
+//        peakSearch.setOnAction(e -> primaryStage.setScene(peakSerchParamWin.getSceneSearch()));
+
 
         // Text Field
         textField = new TextField("100");

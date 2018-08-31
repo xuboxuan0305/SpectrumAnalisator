@@ -28,9 +28,9 @@ import java.util.List;
 
 public class Main extends Application implements EventHandler<ActionEvent> {
 
-    Button buttonBrowse,exitButton,peakSearch;
+    Button buttonBrowse, exitButton, peakSearch, peakSearchAdv;
 
-    Label label,labelHead;
+    Label label, labelHead;
 
     FileChooser fileChooser;
     Stage globalPrimaryStage;
@@ -48,7 +48,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     private Spectrum bSpectr;// = new Spectrum();
     private ReadSpectrumFile reader;// = new SpectrumReader(PATH);
 
-    private PeakSerchParamWin peakSerchParamWin;
+    PeakSerchParamWin peakSerchParamWin;
 
     public static void main(String[] args) {
         launch(args);
@@ -80,6 +80,11 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         exitButton.setTranslateY(90);
         exitButton.setOnAction(e -> Platform.exit());
 
+        peakSearchAdv = new Button("Search");
+        peakSearchAdv.setTranslateX(0);
+        peakSearchAdv.setTranslateY(50);
+        peakSearchAdv.setOnAction(this);
+
         // Button peakSearch
         peakSearch = new Button("PeakSearch");
         peakSearch.setTranslateX(-100);
@@ -89,13 +94,6 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 //        peakSerchParamWin = new PeakSerchParamWin(this.scene, this.globalPrimaryStage);
 //        peakSearch.setOnAction(e -> primaryStage.setScene(peakSerchParamWin.getSceneSearch()));
 
-
-        // Text Field
-        textField = new TextField("100");
-        textField.setMaxSize(45,10);
-        textField.setTranslateX(-160);
-        textField.setTranslateY(90);
-        textField.setVisible(false);
 
 
         //Label
@@ -125,7 +123,6 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         layout.getChildren().addAll(buttonBrowse,
                 peakSearch,
                 exitButton,
-                textField,
                 label,
                 labelHead,
                 scatterChart);
@@ -161,33 +158,58 @@ public class Main extends Application implements EventHandler<ActionEvent> {
             //globalPrimaryStage.setScene(sceneSpe);
         }
 
+        //peak search 2
+        if (event.getSource() == this.peakSearchAdv){
+            this.peakSerchParamWin.setSearchParam();
+            List<Integer> list = this.peakSerchParamWin.processSpectrumSearch(this.bSpectr);
+            this.peakSerchParamWin.setLabelDATA(list);
+            this.globalPrimaryStage.setScene(peakSerchParamWin.getSceneSearch());
+        }
+
         //peak search
         if (event.getSource() == this.peakSearch) {
-            if (this.bSpectr == null) {
-                this.label.setText("Error, no spectrum found");
-            } else {
-                PeakSearchDomain peakSearchDomain = new PeakSearchDomain(this.bSpectr);
-                int ampTresh = Integer.parseInt(this.textField.getText());
-                peakSearchDomain.setSearchParameters(ampTresh, 100, 100, 16000);
-                //show new scene with parameters ...
-                //...............................//
+            this.peakSerchParamWin =
+                    new PeakSerchParamWin(
+                    this.globalPrimaryStage,
+                    this.scene);
+
+            peakSerchParamWin.setSpectrum(this.bSpectr);
+            peakSerchParamWin.addButtonClose(new Button("Close"),-80,50);
+            peakSerchParamWin.addButtonSearch(this.peakSearchAdv);
+
+            this.globalPrimaryStage.setScene(peakSerchParamWin.getSceneSearch());
 
 
-                List<Integer> peaks = peakSearchDomain.execute();
-                if (peaks.size() == 2) { //for cobalt60
-                    for (int i = 0; i < peaks.size(); i++) {
-                        this.labelHead.setText(
-                                this.labelHead.getText() + "\nPeak #" + i + " Channel: " + peaks.get(i));
-                    }
-                } else if (peaks.size() == 0) {
-                    this.labelHead.setText(
-                            this.labelHead.getText() + "\nNothing Found");
-                } else if (peaks.size() > 2) {
-                    this.labelHead.setText(
-                            this.labelHead.getText() + "\nToo many peaks found, \nincrease threshold");
-                }
-            }
+//            if (this.bSpectr == null) {
+//                this.label.setText("Error, no spectrum found");
+//            } else {
+//                PeakSearchDomain peakSearchDomain = new PeakSearchDomain(this.bSpectr);
+//                int ampTresh = Integer.parseInt(this.textField.getText());
+//                peakSearchDomain.setSearchParameters(ampTresh, 100, 100, 16000);
+//                //show new scene with parameters ...
+//                //...............................//
+//
+//
+//                List<Integer> peaks = peakSearchDomain.execute();
+//                output(peaks);
+//            }
         }
+    }
+
+    private void output(List<Integer> peaks) {
+        if (peaks.size() == 2) { //for cobalt60
+            for (int i = 0; i < peaks.size(); i++) {
+                this.labelHead.setText(
+                        this.labelHead.getText() + "\nPeak #" + i + " Channel: " + peaks.get(i));
+            }
+        } else if (peaks.size() == 0) {
+            this.labelHead.setText(
+                    this.labelHead.getText() + "\nNothing Found");
+        } else if (peaks.size() > 2) {
+            this.labelHead.setText(
+                    this.labelHead.getText() + "\nToo many peaks found, \nincrease threshold");
+        }
+
     }
 
     private void readSpectrum() {
@@ -213,7 +235,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
             //enable peakSearch button & text field (search param)
             this.peakSearch.setVisible(true);
-            this.textField.setVisible(true);
+
 
         } else { // if not
             this.label.setText("File format NOT supported");

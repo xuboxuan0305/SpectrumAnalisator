@@ -28,7 +28,7 @@ import java.util.List;
 
 public class Main extends Application implements EventHandler<ActionEvent> {
 
-    Button buttonBrowse, exitButton, peakSearch, peakSearchAdv;
+    Button buttonBrowse, exitButton, peakSearch, peakSearchAdv, closeSearch;
 
     Label label, labelHead;
 
@@ -37,18 +37,14 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     File selectedFile;
     Show show;
     LineChart<Number, Number> scatterChart;
-
     Scene scene;
-    TextField textField;
 
     Chart chart;
     int chartYScaleMax = 1000;
-
+    PeakSerchParamWin peakSerchParamWin;
     private String PATH = "";
     private Spectrum bSpectr;// = new Spectrum();
     private ReadSpectrumFile reader;// = new SpectrumReader(PATH);
-
-    PeakSerchParamWin peakSerchParamWin;
 
     public static void main(String[] args) {
         launch(args);
@@ -94,6 +90,9 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 //        peakSerchParamWin = new PeakSerchParamWin(this.scene, this.globalPrimaryStage);
 //        peakSearch.setOnAction(e -> primaryStage.setScene(peakSerchParamWin.getSceneSearch()));
 
+        closeSearch = new Button("Close");
+        closeSearch.setTranslateX(-80);
+        closeSearch.setTranslateY(50);
 
 
         //Label
@@ -117,7 +116,6 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         this.scatterChart.setTranslateX(10);
 
         layoutSpe.getChildren().add(this.scatterChart);
-//        backButton.setOnAction(e -> primaryStage.setScene(scene));
 
         //Add components
         layout.getChildren().addAll(buttonBrowse,
@@ -132,6 +130,12 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         this.scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        //subWindow
+        if (this.peakSerchParamWin == null) {
+            this.peakSerchParamWin = applicationContext.getBean(PeakSerchParamWin.class);
+        }
+
     }
 
 
@@ -159,7 +163,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         }
 
         //peak search 2
-        if (event.getSource() == this.peakSearchAdv){
+        if (event.getSource() == this.peakSearchAdv) {
             this.peakSerchParamWin.setSearchParam();
             List<Integer> list = this.peakSerchParamWin.processSpectrumSearch(this.bSpectr);
             this.peakSerchParamWin.setLabelDATA(list);
@@ -168,31 +172,15 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
         //peak search
         if (event.getSource() == this.peakSearch) {
-            this.peakSerchParamWin =
-                    new PeakSerchParamWin(
-                    this.globalPrimaryStage,
-                    this.scene);
 
-            peakSerchParamWin.setSpectrum(this.bSpectr);
-            peakSerchParamWin.addButtonClose(new Button("Close"),-80,50);
-            peakSerchParamWin.addButtonSearch(this.peakSearchAdv);
+            if (!this.peakSerchParamWin.isSceneSet()) {
+                this.peakSerchParamWin.setScene(this.globalPrimaryStage, this.scene);
+                this.peakSerchParamWin.addButtonClose(this.closeSearch);
+                this.peakSerchParamWin.addButtonSearch(this.peakSearchAdv);
+                this.peakSerchParamWin.setSpectrum(this.bSpectr);
+            }
 
             this.globalPrimaryStage.setScene(peakSerchParamWin.getSceneSearch());
-
-
-//            if (this.bSpectr == null) {
-//                this.label.setText("Error, no spectrum found");
-//            } else {
-//                PeakSearchDomain peakSearchDomain = new PeakSearchDomain(this.bSpectr);
-//                int ampTresh = Integer.parseInt(this.textField.getText());
-//                peakSearchDomain.setSearchParameters(ampTresh, 100, 100, 16000);
-//                //show new scene with parameters ...
-//                //...............................//
-//
-//
-//                List<Integer> peaks = peakSearchDomain.execute();
-//                output(peaks);
-//            }
         }
     }
 

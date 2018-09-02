@@ -8,9 +8,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class PeakSerchParamWin {
 
     private PeakSearchDomain peakSearchDomain;
@@ -25,7 +27,14 @@ public class PeakSerchParamWin {
     private Spectrum spectrum;
     private int at, st, lld, hld;
 
-    public PeakSerchParamWin(Stage stageGlobal, Scene sceneGlobal) {
+    public PeakSerchParamWin() {
+    }
+
+    public boolean isSceneSet() {
+        return (this.stage != null) && (this.sceneGlobal != null);
+    }
+
+    public void setScene(Stage stageGlobal, Scene sceneGlobal) {
         this.stage = stageGlobal;
         this.sceneGlobal = sceneGlobal;
         this.peakSearchDomain = new PeakSearchDomain();
@@ -42,8 +51,8 @@ public class PeakSerchParamWin {
         this.textSlopeThresh.setMaxSize(45, 10);
 
         this.textLLD = new TextField("100");
-//        this.textLLD.setTranslateX(100);
-//        this.textLLD.setTranslateY(-100);
+        this.textLLD.setTranslateX(0);
+        this.textLLD.setTranslateY(0);
         this.textLLD.setMaxSize(45, 10);
 
         this.textHLD = new TextField("16000");
@@ -70,11 +79,6 @@ public class PeakSerchParamWin {
         this.labelDATA = new Label("DATA:");
         this.labelDATA.setTranslateX(0);
         this.labelDATA.setTranslateY(100);
-
-//        this.serchButton = new Button("Search Peaks");
-//        this.serchButton.setTranslateX(0);
-//        this.serchButton.setTranslateY(50);
-//        this.serchButton.setOnAction(e -> processSpectrumSearch(this.spectrum));
 
         this.layout = new StackPane();
         this.layout.getChildren().addAll(
@@ -107,30 +111,46 @@ public class PeakSerchParamWin {
 
     public void setLabelDATA(List<Integer> peaks) {
 
-        if (peaks.size() == 2) { //for cobalt60
+        if (peaks.size() == 0) {
+            this.labelDATA.setText("\nNothing Found");
+        }
+
+        if (peaks.size() < 9 && peaks.size() > 0) { //for cobalt60
+            this.labelDATA.setText("");
             for (int i = 0; i < peaks.size(); i++) {
-                this.labelDATA.setText(
-                        this.labelDATA.getText() + "\nPeak #" + i + " Channel: " + peaks.get(i));
+                this.labelDATA.setText(this.labelDATA.getText() +
+                        "\nPeak #" + i + " Channel: " + peaks.get(i));
             }
-        } else if (peaks.size() == 0) {
-            this.labelDATA.setText(
-                    this.labelDATA.getText() + "\nNothing Found");
-        } else if (peaks.size() > 2) {
-            this.labelDATA.setText(
-                    this.labelDATA.getText() + "\nToo many peaks found, \nincrease threshold");
+        }
+
+        if (peaks.size() >= 9) {
+            this.labelDATA.setText("\nToo many peaks found, increase threshold" +
+                    "\nPeaks Found: " + peaks.size());
         }
 
     }
 
-    public void addButtonClose(Button button, int x, int y) {
-        button.setTranslateX(x);
-        button.setTranslateY(y);
-        button.setOnAction(e -> this.stage.setScene(this.sceneGlobal));
-        this.layout.getChildren().add(button);
+    public void addButtonClose(Button button) {
+        if (this.closeButton == null) {
+            this.closeButton = button;
+            this.closeButton.setOnAction(e -> this.stage.setScene(this.sceneGlobal));
+            this.layout.getChildren().add(button);
+        }
+
     }
 
+//    public void addButtonClose(Button button, int x, int y) {
+//        button.setTranslateX(x);
+//        button.setTranslateY(y);
+//        button.setOnAction(e -> this.stage.setScene(this.sceneGlobal));
+//        this.layout.getChildren().add(button);
+//    }
+
     public void addButtonSearch(Button button) {
-        this.layout.getChildren().add(button);
+        if (this.serchButton == null) {
+            this.serchButton = button;
+            this.layout.getChildren().add(button);
+        }
     }
 
     public Scene getSceneSearch() {

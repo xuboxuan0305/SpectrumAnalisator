@@ -1,7 +1,11 @@
 package SpectrumApp.java.FX;
 
 import SpectrumApp.java.SPE.Analyser.PeakSearch.PeakSearchDomain;
+import SpectrumApp.java.SPE.Classes.Nuclide;
+import SpectrumApp.java.SPE.Interfaces.Calibr;
+import SpectrumApp.java.SPE.Nuclides.Co60;
 import SpectrumApp.java.SPE.Spectrum;
+import SpectrumApp.java.SPE.lmplementations.EnergyCalibrInterface;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,7 +14,9 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class PeakSerchParamWin {
@@ -22,7 +28,7 @@ public class PeakSerchParamWin {
 
     private TextField textAmpThresh, textSlopeThresh, textLLD, textHLD;
     private Label labelAmpThresh, labelSlopeThresh, labelLLD, labelHLD, labelDATA;
-    private Button serchButton, closeButton;
+    private Button serchButton, closeButton, calibrateButton;
 
     private Spectrum spectrum;
     private int at, st, lld, hld;
@@ -139,12 +145,14 @@ public class PeakSerchParamWin {
 
     }
 
-//    public void addButtonClose(Button button, int x, int y) {
-//        button.setTranslateX(x);
-//        button.setTranslateY(y);
-//        button.setOnAction(e -> this.stage.setScene(this.sceneGlobal));
-//        this.layout.getChildren().add(button);
-//    }
+    public void addButtonCalibrate(Button button) {
+        if (this.calibrateButton == null) {
+            button.setTranslateX(100);
+            button.setTranslateY(50);
+//            button.setOnAction(e -> calibrate(processSpectrumSearch(this.spectrum)));
+            this.layout.getChildren().add(button);
+        }
+    }
 
     public void addButtonSearch(Button button) {
         if (this.serchButton == null) {
@@ -169,7 +177,58 @@ public class PeakSerchParamWin {
         return this.peakSearchDomain.execute();
     }
 
+    public List<Double> calibrate(List<Integer> iChannels) {
+
+        Nuclide co60 = new Co60();
+        List<Double> aChannels = convert2Double(iChannels);
+        List<Double> aEnergies = co60.getEnergies();
+
+        Calibr energyCalibr = new EnergyCalibrInterface();
+        this.spectrum.setEnergyCalibration(energyCalibr.calibrLessSquareMethod(aChannels, aEnergies));
+
+        List<Double> dSpec = new ArrayList<>();
+        for (int i:iChannels) {
+            dSpec.add(this.spectrum.getEnergy(i));
+        }
+        return dSpec;
+    }
+
+    public void setLabelDATA(List<Integer> peaks, List<Double> energies) {
+
+        if (peaks.size() < 2) {
+            this.labelDATA.setText("\nNothing Found");
+        }
+
+        if (peaks.size() == 2 && energies.size() == 2) { //for cobalt60
+            this.labelDATA.setText("");
+            for (int i = 0; i < peaks.size(); i++) {
+                this.labelDATA.setText(this.labelDATA.getText() +
+                        "\nPeak #" + i + " Channel: " + peaks.get(i) +
+                        " Energy: " + energies.get(i) + " keV");
+            }
+        }
+
+        if (peaks.size() >= 3) {
+            this.labelDATA.setText("\nToo many peaks found, increase threshold" +
+                    "\nPeaks Found: " + peaks.size());
+        }
+
+    }
+
     public void setSpectrum(Spectrum spectrum) {
         this.spectrum = spectrum;
     }
+
+    private List<Double> convert2Double(List<Integer> listIntegers) {
+        return listIntegers.stream()
+                .map(String::valueOf)
+                .map(Double::valueOf)
+                .collect(Collectors.toList());
+//        List<Double> doubleList = new ArrayList<>();
+//        for (int i : listIntegers) {
+//            doubleList.add(Double.parseDouble(String.valueOf(i)));
+//        }
+//        return doubleList;
+    }
+
 }

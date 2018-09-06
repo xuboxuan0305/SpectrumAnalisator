@@ -28,7 +28,7 @@ import java.util.List;
 
 public class Main extends Application implements EventHandler<ActionEvent> {
 
-    Button buttonBrowse, exitButton, peakSearch, peakSearchAdv, closeSearch;
+    Button buttonBrowse, exitButton, peakSearch, peakSearchAdv, closeSearch, calibrButton;
 
     Label label, labelHead;
 
@@ -80,6 +80,9 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         peakSearchAdv.setTranslateX(0);
         peakSearchAdv.setTranslateY(50);
         peakSearchAdv.setOnAction(this);
+
+        calibrButton = new Button("Calibrate");
+        calibrButton.setOnAction(this);
 
         // Button peakSearch
         peakSearch = new Button("PeakSearch");
@@ -162,6 +165,13 @@ public class Main extends Application implements EventHandler<ActionEvent> {
             //globalPrimaryStage.setScene(sceneSpe);
         }
 
+        // calibrate
+        if (event.getSource() == this.calibrButton) {
+            List<Integer> chn = this.peakSerchParamWin.processSpectrumSearch(this.bSpectr);
+            List<Double> eng = this.peakSerchParamWin.calibrate(chn);
+            this.peakSerchParamWin.setLabelDATA(chn,eng);
+        }
+
         //peak search 2
         if (event.getSource() == this.peakSearchAdv) {
             this.peakSerchParamWin.setSearchParam();
@@ -177,6 +187,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
                 this.peakSerchParamWin.setScene(this.globalPrimaryStage, this.scene);
                 this.peakSerchParamWin.addButtonClose(this.closeSearch);
                 this.peakSerchParamWin.addButtonSearch(this.peakSearchAdv);
+                this.peakSerchParamWin.addButtonCalibrate(this.calibrButton);
                 this.peakSerchParamWin.setSpectrum(this.bSpectr);
             }
 
@@ -184,21 +195,21 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         }
     }
 
-    private void output(List<Integer> peaks) {
-        if (peaks.size() == 2) { //for cobalt60
-            for (int i = 0; i < peaks.size(); i++) {
-                this.labelHead.setText(
-                        this.labelHead.getText() + "\nPeak #" + i + " Channel: " + peaks.get(i));
-            }
-        } else if (peaks.size() == 0) {
-            this.labelHead.setText(
-                    this.labelHead.getText() + "\nNothing Found");
-        } else if (peaks.size() > 2) {
-            this.labelHead.setText(
-                    this.labelHead.getText() + "\nToo many peaks found, \nincrease threshold");
-        }
-
-    }
+//    private void output(List<Integer> peaks) {
+//        if (peaks.size() == 2) { //for cobalt60
+//            for (int i = 0; i < peaks.size(); i++) {
+//                this.labelHead.setText(
+//                        this.labelHead.getText() + "\nPeak #" + i + " Channel: " + peaks.get(i));
+//            }
+//        } else if (peaks.size() == 0) {
+//            this.labelHead.setText(
+//                    this.labelHead.getText() + "\nNothing Found");
+//        } else if (peaks.size() > 2) {
+//            this.labelHead.setText(
+//                    this.labelHead.getText() + "\nToo many peaks found, \nincrease threshold");
+//        }
+//
+//    }
 
     private void readSpectrum() {
         ReadSpectrumFile reader = new SpectrumReader(PATH);

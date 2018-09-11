@@ -1,7 +1,6 @@
 package SpectrumApp.java.FX;
 
 import SpectrumApp.java.Config.SpringApplicationConfig;
-import SpectrumApp.java.SPE.Analyser.PeakSearch.PeakSearchDomain;
 import SpectrumApp.java.SPE.Interfaces.Show;
 import SpectrumApp.java.SPE.Read.ReadSpectrumFile;
 import SpectrumApp.java.SPE.Read.SpectrumReader;
@@ -15,10 +14,10 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -28,9 +27,13 @@ import java.util.List;
 
 public class Main extends Application implements EventHandler<ActionEvent> {
 
-    Button buttonBrowse, exitButton, peakSearch, peakSearchAdv, closeSearch, calibrButton;
+    private Button buttonBrowse;
+    private Button peakSearch;
+    private Button peakSearchAdv;
+    private Button closeSearch;
+    private Button calibrButton;
 
-    Label label, labelHead;
+    private Label label, labelHead;
 
     FileChooser fileChooser;
     Stage globalPrimaryStage;
@@ -71,7 +74,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         buttonBrowse.setOnAction(this);
 
         // Button exit
-        exitButton = new Button("Exit");
+        Button exitButton = new Button("Exit");
         exitButton.setTranslateX(100);
         exitButton.setTranslateY(90);
         exitButton.setOnAction(e -> Platform.exit());
@@ -159,17 +162,29 @@ public class Main extends Application implements EventHandler<ActionEvent> {
             }
         }
 
-        if (!path.equals("")) { // if not empty
+        // if not empty - when select file
+        if (!path.equals("")) {
             setPATH(path); //set global path to file
             readSpectrum(); //read spectrum
             //globalPrimaryStage.setScene(sceneSpe);
         }
 
+        // if spectrum calibrated - do something
+        if (this.bSpectr.isSpectrumCalibrated()){
+            this.label.setText(  this.label.getText() + "\nCalibrated =)");
+        }
+
         // calibrate
         if (event.getSource() == this.calibrButton) {
+            /*For Cobalt 60 - only 2 energies / 2 channel */
             List<Integer> chn = this.peakSerchParamWin.processSpectrumSearch(this.bSpectr);
-            List<Double> eng = this.peakSerchParamWin.calibrate(chn);
-            this.peakSerchParamWin.setLabelDATA(chn,eng);
+            if (chn.size()!= 2){
+                this.peakSerchParamWin.setLabelError("For Cobalt 60 - 2 peaks needed for calibration");
+            }else{
+                List<Double> eng = this.peakSerchParamWin.calibrate(chn);
+                this.peakSerchParamWin.setLabelDATA(chn,eng);
+            }
+
         }
 
         //peak search 2
@@ -194,22 +209,6 @@ public class Main extends Application implements EventHandler<ActionEvent> {
             this.globalPrimaryStage.setScene(peakSerchParamWin.getSceneSearch());
         }
     }
-
-//    private void output(List<Integer> peaks) {
-//        if (peaks.size() == 2) { //for cobalt60
-//            for (int i = 0; i < peaks.size(); i++) {
-//                this.labelHead.setText(
-//                        this.labelHead.getText() + "\nPeak #" + i + " Channel: " + peaks.get(i));
-//            }
-//        } else if (peaks.size() == 0) {
-//            this.labelHead.setText(
-//                    this.labelHead.getText() + "\nNothing Found");
-//        } else if (peaks.size() > 2) {
-//            this.labelHead.setText(
-//                    this.labelHead.getText() + "\nToo many peaks found, \nincrease threshold");
-//        }
-//
-//    }
 
     private void readSpectrum() {
         ReadSpectrumFile reader = new SpectrumReader(PATH);

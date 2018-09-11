@@ -192,11 +192,14 @@ public class PeakSerchParamWin {
         }
         return dSpec;
     }
+    public void setLabelError(String string){
+        this.labelDATA.setText(string);
+    }
 
     public void setLabelDATA(List<Integer> peaks, List<Double> energies) {
 
         if (peaks.size() < 2) {
-            this.labelDATA.setText("\nNothing Found");
+            this.labelDATA.setText("\nLess Then 2 peaks found");
         }
 
         if (peaks.size() == 2 && energies.size() == 2) { //for cobalt60
@@ -224,11 +227,6 @@ public class PeakSerchParamWin {
                 .map(String::valueOf)
                 .map(Double::valueOf)
                 .collect(Collectors.toList());
-//        List<Double> doubleList = new ArrayList<>();
-//        for (int i : listIntegers) {
-//            doubleList.add(Double.parseDouble(String.valueOf(i)));
-//        }
-//        return doubleList;
     }
 
 }

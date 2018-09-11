@@ -24,6 +24,10 @@ public class Spectrum {
         this.energyCalibration = new EnergyCalibration();
     }
 
+    public boolean isSpectrumCalibrated(){
+        return this.energyCalibration.isEnergyCalibr();
+    }
+
     public void setHead(SpeMetaData head) {
         this.head = head;
     }

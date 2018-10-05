@@ -54,6 +54,11 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     }
 
     @Override
+    public void init() throws Exception {
+        super.init();
+    }
+
+    @Override
     public void start(Stage primaryStage) throws Exception {
         //Spring App context
         ApplicationContext applicationContext
@@ -154,7 +159,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
             this.fileChooser = new FileChooser();
             this.fileChooser.setInitialFileName("*.spe, *.txt");
             this.fileChooser.setInitialDirectory(
-                    new File("C:\\Java\\SpectrumAnalisator\\src\\main\\java\\SpectrumApp\\java\\SPE\\Co60spe"));
+                    new File("C:\\Users\\renatrazumilov\\IdeaProjects\\SpectrumAnalisator\\src\\main\\java\\SpectrumApp\\java\\SPE\\Co60spe"));
 
             this.selectedFile = this.fileChooser.showOpenDialog(this.globalPrimaryStage);
             if (this.selectedFile != null) {

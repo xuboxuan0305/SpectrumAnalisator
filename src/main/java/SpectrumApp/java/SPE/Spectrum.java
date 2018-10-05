@@ -138,4 +138,13 @@ public class Spectrum {
         return spe[channelNumber - 1].getCounts();
     }
 
+    public List<Integer> getChannels(int firstChannel, int size){
+        //input validation
+        List<Integer>list = new ArrayList<>();
+        for (int i = firstChannel; i <= size; i++){
+           list.add(spe[firstChannel - 1].getCounts());
+        }
+        return list;
+    }
+
 }

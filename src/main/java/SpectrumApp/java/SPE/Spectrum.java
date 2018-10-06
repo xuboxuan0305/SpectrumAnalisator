@@ -24,7 +24,7 @@ public class Spectrum {
         this.energyCalibration = new EnergyCalibration();
     }
 
-    public boolean isSpectrumCalibrated(){
+    public boolean isSpectrumCalibrated() {
         return this.energyCalibration.isEnergyCalibr();
     }
 
@@ -138,13 +138,19 @@ public class Spectrum {
         return spe[channelNumber - 1].getCounts();
     }
 
-    public List<Integer> getChannels(int firstChannel, int size){
+    public List<Integer> getChannels(int firstChannel, int size) {
         //input validation
-        List<Integer>list = new ArrayList<>();
-        for (int i = firstChannel; i <= size; i++){
-           list.add(spe[firstChannel - 1].getCounts());
+        List<Integer> list = new ArrayList<>();
+        if ((firstChannel < 1) || (firstChannel > 16000) || (size < 1) || (size > 16000)) {
+            list.add(0);
+            return list;
+        } else {
+            for (int i = firstChannel; i <= size; i++) {
+                list.add(spe[firstChannel - 1].getCounts());
+            }
+            return list;
         }
-        return list;
+
     }
 
 }

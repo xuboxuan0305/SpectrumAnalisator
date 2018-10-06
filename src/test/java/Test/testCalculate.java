@@ -58,8 +58,22 @@ public class testCalculate {
         List<Integer> list = spectrum.getChannels(100,100);
         calculate = new CalculateBackground();
         double average = calculate.calculateAverage(list);
-        TestCase.assertNotSame(average,274.0D);
+        TestCase.assertEquals(average,274.0D);
     }
 
-    //Negative testing
+    @Test
+    public void testGetChannelsNegative(){
+        List<Integer> list = spectrum.getChannels(100,-1);
+        calculate = new CalculateBackground();
+        double average = calculate.calculateAverage(list);
+        TestCase.assertEquals(average,0.0);
+    }
+
+    @Test
+    public void testGetChannelsNegative2(){
+        List<Integer> list = spectrum.getChannels(-1,10);
+        calculate = new CalculateBackground();
+        double average = calculate.calculateAverage(list);
+        TestCase.assertEquals(average,0.0);
+    }
 }

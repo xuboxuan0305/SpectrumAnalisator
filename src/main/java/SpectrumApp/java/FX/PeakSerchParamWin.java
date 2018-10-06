@@ -28,10 +28,13 @@ public class PeakSerchParamWin {
 
     private TextField textAmpThresh, textSlopeThresh, textLLD, textHLD;
     private Label labelAmpThresh, labelSlopeThresh, labelLLD, labelHLD, labelDATA;
-    private Button serchButton, closeButton, calibrateButton;
+    private Label labelBackGroundStart, labelBackGroundSize;
+    private Button searchButton, closeButton, calibrateButton;
 
     private Spectrum spectrum;
     private int at, st, lld, hld;
+    private double background;
+    private TextField backgroundStart, backgroundSize;
 
     public PeakSerchParamWin() {
     }
@@ -86,6 +89,23 @@ public class PeakSerchParamWin {
         this.labelDATA.setTranslateX(0);
         this.labelDATA.setTranslateY(100);
 
+        this.labelBackGroundStart = new Label("BackGround Start");
+        this.labelBackGroundStart.setTranslateX(-200);
+        this.labelBackGroundStart.setTranslateY(-150);
+
+        this.labelBackGroundSize = new Label("Size");
+        this.labelBackGroundSize.setTranslateX(-100);
+        this.labelBackGroundSize.setTranslateY(-150);
+
+        this.backgroundStart = new TextField("100");
+        this.backgroundSize = new TextField("100");
+        this.backgroundStart.setMaxSize(50,10);
+        this.backgroundSize.setMaxSize(50,10);
+        this.backgroundStart.setTranslateX(-200);
+        this.backgroundStart.setTranslateY(-100);
+        this.backgroundSize.setTranslateX(-100);
+        this.backgroundSize.setTranslateY(-100);
+
         this.layout = new StackPane();
         this.layout.getChildren().addAll(
                 this.labelAmpThresh,
@@ -96,7 +116,11 @@ public class PeakSerchParamWin {
                 this.textSlopeThresh,
                 this.textHLD,
                 this.textLLD,
-                this.labelDATA);
+                this.labelDATA,
+                this.backgroundStart,
+                this.backgroundSize,
+                this.labelBackGroundStart,
+                this.labelBackGroundSize);
     }
 
     public void setSearchParam() {
@@ -155,8 +179,8 @@ public class PeakSerchParamWin {
     }
 
     public void addButtonSearch(Button button) {
-        if (this.serchButton == null) {
-            this.serchButton = button;
+        if (this.searchButton == null) {
+            this.searchButton = button;
             this.layout.getChildren().add(button);
         }
     }

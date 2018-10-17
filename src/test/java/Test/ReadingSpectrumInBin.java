@@ -19,7 +19,7 @@ import static junit.framework.Assert.assertEquals;
  * Created by Renat Razumilov on 19/09/17.
  */
 public class ReadingSpectrumInBin {
-    private static final String PATH = "C:\\Java\\SpectrumAnalisator\\src\\main\\java\\SPE\\Co60spe\\Co-60 2.spe";
+    private static final String PATH = "C:\\Java\\SpectrumAnalisator\\src\\main\\java\\SpectrumApp\\java\\SPE\\Co60spe\\Co-60 2.spe";
     private  Spectrum bSpectr = new Spectrum();
     private  ReadSpectrumFile reader = new SpectrumReader(PATH);
 

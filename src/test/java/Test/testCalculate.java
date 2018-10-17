@@ -15,7 +15,7 @@ public class testCalculate {
     private List<Integer> integerList;
     private Calculate calculate;
     private static final String PATH =
-            "C:\\Users\\renatrazumilov\\IdeaProjects\\SpectrumAnalisator\\src\\main\\java\\SpectrumApp\\java\\SPE\\Co60spe\\Co-60 2.spe";
+            "C:\\Java\\SpectrumAnalisator\\src\\main\\java\\SpectrumApp\\java\\SPE\\Co60spe\\Co-60 2.spe";
 
     private final SpectrumReader reader = new SpectrumReader(PATH);
     private Spectrum spectrum;

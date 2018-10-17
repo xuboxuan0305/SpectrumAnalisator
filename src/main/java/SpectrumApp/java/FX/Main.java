@@ -1,10 +1,12 @@
 package SpectrumApp.java.FX;
 
 import SpectrumApp.java.Config.SpringApplicationConfig;
+import SpectrumApp.java.SPE.Interfaces.Calculate;
 import SpectrumApp.java.SPE.Interfaces.Show;
 import SpectrumApp.java.SPE.Read.ReadSpectrumFile;
 import SpectrumApp.java.SPE.Read.SpectrumReader;
 import SpectrumApp.java.SPE.Spectrum;
+import SpectrumApp.java.SPE.lmplementations.CalculateBackground;
 import SpectrumApp.java.SPE.lmplementations.PrintSpectrum;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -17,7 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
+import org.apache.commons.math3.util.Precision;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -27,27 +29,28 @@ import java.util.List;
 
 public class Main extends Application implements EventHandler<ActionEvent> {
 
-    private Button buttonBrowse;
-    private Button peakSearch;
-    private Button peakSearchAdv;
-    private Button closeSearch;
-    private Button calibrButton;
-
-    private Label label, labelHead;
-
     FileChooser fileChooser;
     Stage globalPrimaryStage;
     File selectedFile;
     Show show;
     LineChart<Number, Number> scatterChart;
     Scene scene;
-
     Chart chart;
     int chartYScaleMax = 1000;
     PeakSerchParamWin peakSerchParamWin;
+    private Button buttonBrowse;
+    private Button peakSearch;
+    private Button peakSearchAdv;
+    private Button closeSearch;
+    private Button calibrButton;
+    private Button calcButton;
+
+    private Label label, labelHead;
     private String PATH = "";
     private Spectrum bSpectr;// = new Spectrum();
     private ReadSpectrumFile reader;// = new SpectrumReader(PATH);
+
+    private Calculate calculate;
 
     public static void main(String[] args) {
         launch(args);
@@ -89,6 +92,11 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         peakSearchAdv.setTranslateY(50);
         peakSearchAdv.setOnAction(this);
 
+        calcButton = new Button("Calc");
+//        peakSearchAdv.setTranslateX(0);
+//        peakSearchAdv.setTranslateY(50);
+        calcButton.setOnAction(this);
+
         calibrButton = new Button("Calibrate");
         calibrButton.setOnAction(this);
 
@@ -109,7 +117,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         //Label
         label = new Label("Info:");
         label.setTranslateX(10);
-        label.setTranslateY(120);
+        label.setTranslateY(140);
 
         //Label
         labelHead = new Label("Data:");
@@ -159,9 +167,14 @@ public class Main extends Application implements EventHandler<ActionEvent> {
             this.fileChooser = new FileChooser();
             this.fileChooser.setInitialFileName("*.spe, *.txt");
             this.fileChooser.setInitialDirectory(
-                    new File("C:\\Users\\renatrazumilov\\IdeaProjects\\SpectrumAnalisator\\src\\main\\java\\SpectrumApp\\java\\SPE\\Co60spe"));
+                    new File("C:\\Java\\SpectrumAnalisator\\src\\main\\java\\SpectrumApp\\java\\SPE\\Co60spe"));
 
-            this.selectedFile = this.fileChooser.showOpenDialog(this.globalPrimaryStage);
+            try {
+                this.selectedFile = this.fileChooser.showOpenDialog(this.globalPrimaryStage);
+            } catch (IllegalArgumentException e) {
+                this.label.setText("Problem with default path");
+            }
+
             if (this.selectedFile != null) {
                 path = this.selectedFile.getAbsolutePath();
             }
@@ -174,20 +187,19 @@ public class Main extends Application implements EventHandler<ActionEvent> {
             //globalPrimaryStage.setScene(sceneSpe);
         }
 
-        // if spectrum calibrated - do something
-        if (this.bSpectr.isSpectrumCalibrated()){
-            this.label.setText(  this.label.getText() + "\nCalibrated =)");
-        }
-
         // calibrate
         if (event.getSource() == this.calibrButton) {
             /*For Cobalt 60 - only 2 energies / 2 channel */
             List<Integer> chn = this.peakSerchParamWin.processSpectrumSearch(this.bSpectr);
-            if (chn.size()!= 2){
+            if (chn.size() != 2) {
                 this.peakSerchParamWin.setLabelError("For Cobalt 60 - 2 peaks needed for calibration");
-            }else{
+            } else {
                 List<Double> eng = this.peakSerchParamWin.calibrate(chn);
-                this.peakSerchParamWin.setLabelDATA(chn,eng);
+                this.peakSerchParamWin.setLabelDATA(chn, eng);
+                //Show message if calibrated
+                if (this.bSpectr.isSpectrumCalibrated()) {
+                    this.label.setText(this.label.getText() + "\nCalibrated =)");
+                }
             }
 
         }
@@ -208,10 +220,25 @@ public class Main extends Application implements EventHandler<ActionEvent> {
                 this.peakSerchParamWin.addButtonClose(this.closeSearch);
                 this.peakSerchParamWin.addButtonSearch(this.peakSearchAdv);
                 this.peakSerchParamWin.addButtonCalibrate(this.calibrButton);
+                this.peakSerchParamWin.addButtonCalc(this.calcButton);
                 this.peakSerchParamWin.setSpectrum(this.bSpectr);
             }
 
             this.globalPrimaryStage.setScene(peakSerchParamWin.getSceneSearch());
+        }
+        // button calculate is triggered
+        if (event.getSource() == this.calcButton) {
+            if (this.calculate == null) {
+                this.calculate = new CalculateBackground();
+            }
+            // first channel and size of background calc
+            int first = peakSerchParamWin.getROI(1);
+            int size = peakSerchParamWin.getROI(2);
+            List<Integer> list = this.bSpectr.getChannels(first, size);
+            Double aveBackground = this.calculate.calculateAverage(list);
+            ;
+            this.peakSerchParamWin.setLabelError("Average background = " +
+                    Precision.round(aveBackground,3));
         }
     }
 

@@ -146,7 +146,7 @@ public class Spectrum {
             return list;
         } else {
             for (int i = firstChannel; i <= size; i++) {
-                list.add(spe[firstChannel - 1].getCounts());
+                list.add(spe[i - 1].getCounts());
             }
             return list;
         }

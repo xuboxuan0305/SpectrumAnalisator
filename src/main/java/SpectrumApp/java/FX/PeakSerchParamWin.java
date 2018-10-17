@@ -99,8 +99,8 @@ public class PeakSerchParamWin {
 
         this.backgroundStart = new TextField("100");
         this.backgroundSize = new TextField("100");
-        this.backgroundStart.setMaxSize(50,10);
-        this.backgroundSize.setMaxSize(50,10);
+        this.backgroundStart.setMaxSize(50, 10);
+        this.backgroundSize.setMaxSize(50, 10);
         this.backgroundStart.setTranslateX(-200);
         this.backgroundStart.setTranslateY(-100);
         this.backgroundSize.setTranslateX(-100);
@@ -178,6 +178,25 @@ public class PeakSerchParamWin {
         }
     }
 
+    public int getROI(int firstOrSize) {
+        switch (firstOrSize) {
+            case 1:
+                return Integer.parseInt(this.backgroundStart.getText());
+            case 2:
+                return Integer.parseInt(this.backgroundSize.getText());
+        }
+        return 0;
+    }
+
+    public void addButtonCalc(Button button) {
+        if (this.calibrateButton == null) {
+            button.setTranslateX(-150);
+            button.setTranslateY(50);
+//            button.setOnAction(e -> calibrate(processSpectrumSearch(this.spectrum)));
+            this.layout.getChildren().add(button);
+        }
+    }
+
     public void addButtonSearch(Button button) {
         if (this.searchButton == null) {
             this.searchButton = button;
@@ -211,12 +230,13 @@ public class PeakSerchParamWin {
         this.spectrum.setEnergyCalibration(energyCalibr.calibrLessSquareMethod(aChannels, aEnergies));
 
         List<Double> dSpec = new ArrayList<>();
-        for (int i:iChannels) {
+        for (int i : iChannels) {
             dSpec.add(this.spectrum.getEnergy(i));
         }
         return dSpec;
     }
-    public void setLabelError(String string){
+
+    public void setLabelError(String string) {
         this.labelDATA.setText(string);
     }
 
